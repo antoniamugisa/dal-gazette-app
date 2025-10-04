@@ -11,8 +11,9 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { ArticleCard } from '../components/ArticleCard';
 import { CategoryChip } from '../components/CategoryChip';
-import { SearchBar } from '../components/SearchBar';
 import { LoadingSpinner } from '../components/LoadingSpinner';
+import { AppHeader } from '../components/AppHeader';
+import { SearchModal } from '../components/SearchModal';
 import { MOCK_ARTICLES } from '../constants/mockData';
 import { CATEGORIES } from '../constants/theme';
 import { Article } from '../types';
@@ -20,11 +21,12 @@ import { useAppContext } from '../context/AppContext';
 
 export const HomeScreen: React.FC = () => {
   const navigation = useNavigation();
-  const { setSelectedArticle, searchQuery, setSearchQuery, selectedCategory, setSelectedCategory } = useAppContext();
+  const { setSelectedArticle, selectedCategory, setSelectedCategory } = useAppContext();
   const [articles, setArticles] = useState<Article[]>([]);
   const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [searchModalVisible, setSearchModalVisible] = useState(false);
 
   useEffect(() => {
     loadArticles();
@@ -32,7 +34,7 @@ export const HomeScreen: React.FC = () => {
 
   useEffect(() => {
     filterArticles();
-  }, [articles, searchQuery, selectedCategory]);
+  }, [articles, selectedCategory]);
 
   const loadArticles = async () => {
     setLoading(true);
@@ -45,15 +47,6 @@ export const HomeScreen: React.FC = () => {
 
   const filterArticles = () => {
     let filtered = articles;
-
-    if (searchQuery) {
-      filtered = filtered.filter(
-        article =>
-          article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          article.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          article.author.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
 
     if (selectedCategory) {
       filtered = filtered.filter(article => article.category === selectedCategory);
@@ -77,8 +70,8 @@ export const HomeScreen: React.FC = () => {
     setSelectedCategory(selectedCategory === categoryId ? null : categoryId);
   };
 
-  const handleSearchClear = () => {
-    setSearchQuery('');
+  const handleSearchPress = () => {
+    setSearchModalVisible(true);
   };
 
   const renderArticle = ({ item }: { item: Article }) => (
@@ -107,18 +100,8 @@ export const HomeScreen: React.FC = () => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.title}>Dal Gazette</Text>
-          <Text style={styles.subtitle}>Your campus news source</Text>
-        </View>
-
-        {/* Search Bar */}
-        <SearchBar
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          onClear={handleSearchClear}
-        />
+        {/* Header with Logo and Search */}
+        <AppHeader onSearchPress={handleSearchPress} />
 
         {/* Category Chips */}
         <View style={styles.categoriesContainer}>
@@ -157,6 +140,14 @@ export const HomeScreen: React.FC = () => {
           />
         </View>
       </ScrollView>
+
+      {/* Search Modal */}
+      <SearchModal
+        visible={searchModalVisible}
+        onClose={() => setSearchModalVisible(false)}
+        articles={articles}
+        onArticlePress={handleArticlePress}
+      />
     </View>
   );
 };
@@ -168,22 +159,6 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
-  },
-  header: {
-    paddingHorizontal: 16,
-    paddingTop: 20,
-    paddingBottom: 16,
-    backgroundColor: '#FFFFFF',
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: '800',
-    color: '#000000',
-    marginBottom: 4,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#6B7280',
   },
   categoriesContainer: {
     backgroundColor: '#FFFFFF',

@@ -1,10 +1,10 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Home, Newspaper, Trophy, Palette } from 'lucide-react-native';
+import { Home, Headphones, Gamepad2, User } from 'lucide-react-native';
 import { HomeScreen } from '../screens/HomeScreen';
-import { NewsScreen } from '../screens/NewsScreen';
-import { SportsScreen } from '../screens/SportsScreen';
-import { CultureScreen } from '../screens/CultureScreen';
+import { ListenScreen } from '../screens/ListenScreen';
+import { PlayScreen } from '../screens/PlayScreen';
+import { YouScreen } from '../screens/YouScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -40,29 +40,29 @@ export const BottomTabBar = () => {
         }}
       />
       <Tab.Screen
-        name="News"
-        component={NewsScreen}
+        name="Listen"
+        component={ListenScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Newspaper size={size} color={color} />
+            <Headphones size={size} color={color} />
           ),
         }}
       />
       <Tab.Screen
-        name="Sports"
-        component={SportsScreen}
+        name="Play"
+        component={PlayScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Trophy size={size} color={color} />
+            <Gamepad2 size={size} color={color} />
           ),
         }}
       />
       <Tab.Screen
-        name="Culture"
-        component={CultureScreen}
+        name="You"
+        component={YouScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Palette size={size} color={color} />
+            <User size={size} color={color} />
           ),
         }}
       />

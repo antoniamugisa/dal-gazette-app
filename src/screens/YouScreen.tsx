@@ -5,14 +5,17 @@ import {
   FlatList,
   StyleSheet,
   RefreshControl,
+  TouchableOpacity,
 } from 'react-native';
 import { ArticleCard } from '../components/ArticleCard';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { AppHeader } from '../components/AppHeader';
 import { MOCK_ARTICLES } from '../constants/mockData';
 import { Article } from '../types';
+import { useAppContext } from '../context/AppContext';
 
-export const NewsScreen: React.FC = () => {
+export const YouScreen: React.FC = () => {
+  const { bookmarkedArticles } = useAppContext();
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -23,10 +26,12 @@ export const NewsScreen: React.FC = () => {
 
   const loadArticles = async () => {
     setLoading(true);
-    // Filter for News category
-    const newsArticles = MOCK_ARTICLES.filter(article => article.category === 'News');
+    // Show bookmarked articles or all articles if no bookmarks
+    const userArticles = bookmarkedArticles.length > 0 
+      ? MOCK_ARTICLES.filter(article => bookmarkedArticles.includes(article.id))
+      : MOCK_ARTICLES;
     setTimeout(() => {
-      setArticles(newsArticles);
+      setArticles(userArticles);
       setLoading(false);
     }, 1000);
   };
@@ -47,12 +52,21 @@ export const NewsScreen: React.FC = () => {
   );
 
   if (loading) {
-    return <LoadingSpinner message="Loading news articles..." />;
+    return <LoadingSpinner message="Loading your content..." />;
   }
 
   return (
     <View style={styles.container}>
       <AppHeader />
+      
+      {bookmarkedArticles.length === 0 && (
+        <View style={styles.emptyState}>
+          <Text style={styles.emptyTitle}>No Saved Articles</Text>
+          <Text style={styles.emptyMessage}>
+            Bookmark articles to see them here
+          </Text>
+        </View>
+      )}
       
       <FlatList
         data={articles}
@@ -75,5 +89,23 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     paddingVertical: 8,
+  },
+  emptyState: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 40,
+  },
+  emptyTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#000000',
+    marginBottom: 8,
+  },
+  emptyMessage: {
+    fontSize: 16,
+    color: '#6B7280',
+    textAlign: 'center',
+    lineHeight: 24,
   },
 });

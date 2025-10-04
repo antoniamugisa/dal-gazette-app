@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { ArticleCard } from '../components/ArticleCard';
 import { LoadingSpinner } from '../components/LoadingSpinner';
+import { AppHeader } from '../components/AppHeader';
 import { MOCK_ARTICLES } from '../constants/mockData';
 import { Article } from '../types';
 
@@ -51,10 +52,7 @@ export const CultureScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Arts & Culture</Text>
-        <Text style={styles.subtitle}>Events, reviews, and creative content</Text>
-      </View>
+      <AppHeader />
       
       <FlatList
         data={articles}
@@ -74,24 +72,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F8F9FA',
-  },
-  header: {
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 16,
-    paddingTop: 20,
-    paddingBottom: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: '800',
-    color: '#000000',
-    marginBottom: 4,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#6B7280',
   },
   listContainer: {
     paddingVertical: 8,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { AppProvider } from './src/context/AppContext';
 import { AppNavigator } from './src/navigation/AppNavigator';
@@ -13,7 +13,9 @@ export default function App() {
         <AppProvider>
           <NavigationContainer>
             <StatusBar style="dark" backgroundColor="#FFFFFF" />
-            <AppNavigator />
+            <SafeAreaView style={{ flex: 1 }} edges={['bottom']}>
+              <AppNavigator />
+            </SafeAreaView>
           </NavigationContainer>
         </AppProvider>
       </SafeAreaProvider>

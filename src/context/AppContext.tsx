@@ -9,8 +9,6 @@ interface AppContextType {
   toggleBookmark: (articleId: string) => void;
   theme: AppTheme;
   toggleTheme: () => void;
-  searchQuery: string;
-  setSearchQuery: (query: string) => void;
   selectedCategory: string | null;
   setSelectedCategory: (category: string | null) => void;
 }
@@ -33,7 +31,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [bookmarkedArticles, setBookmarkedArticles] = useState<string[]>([]);
   const [theme, setTheme] = useState<AppTheme>(LIGHT_THEME);
-  const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const toggleBookmark = (articleId: string) => {
@@ -55,8 +52,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     toggleBookmark,
     theme,
     toggleTheme,
-    searchQuery,
-    setSearchQuery,
     selectedCategory,
     setSelectedCategory,
   };

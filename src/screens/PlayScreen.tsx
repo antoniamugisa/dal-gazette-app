@@ -12,7 +12,7 @@ import { AppHeader } from '../components/AppHeader';
 import { MOCK_ARTICLES } from '../constants/mockData';
 import { Article } from '../types';
 
-export const NewsScreen: React.FC = () => {
+export const PlayScreen: React.FC = () => {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -23,10 +23,13 @@ export const NewsScreen: React.FC = () => {
 
   const loadArticles = async () => {
     setLoading(true);
-    // Filter for News category
-    const newsArticles = MOCK_ARTICLES.filter(article => article.category === 'News');
+    // Filter for interactive/play content
+    const playArticles = MOCK_ARTICLES.filter(article => 
+      article.category === 'Sports' || 
+      article.tags.some(tag => tag.includes('game') || tag.includes('play') || tag.includes('interactive'))
+    );
     setTimeout(() => {
-      setArticles(newsArticles);
+      setArticles(playArticles);
       setLoading(false);
     }, 1000);
   };
@@ -47,7 +50,7 @@ export const NewsScreen: React.FC = () => {
   );
 
   if (loading) {
-    return <LoadingSpinner message="Loading news articles..." />;
+    return <LoadingSpinner message="Loading interactive content..." />;
   }
 
   return (
