@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { BottomTabBar } from '../components/BottomTabBar';
 import { ArticleDetailScreen } from '../screens/ArticleDetailScreen';
 import { TopicArticlesScreen } from '../screens/TopicArticlesScreen';
+import { SettingsScreen } from '../screens/SettingsScreen';
 import { useAppContext } from '../context/AppContext';
 
 const Stack = createStackNavigator();
@@ -28,6 +29,13 @@ export const AppNavigator = () => {
       <Stack.Screen
         name="TopicArticles"
         component={TopicArticlesScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Settings"
+        component={SettingsScreen}
         options={{
           headerShown: false,
         }}

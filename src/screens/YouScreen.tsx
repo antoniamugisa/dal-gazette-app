@@ -9,6 +9,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 import { Settings, Bookmark, Eye } from 'lucide-react-native';
 import { ArticleCard } from '../components/ArticleCard';
 import { LoadingSpinner } from '../components/LoadingSpinner';
@@ -17,6 +18,7 @@ import { Article } from '../types';
 import { useAppContext } from '../context/AppContext';
 
 export const YouScreen: React.FC = () => {
+  const navigation = useNavigation();
   const { bookmarkedArticles } = useAppContext();
   const [savedArticles, setSavedArticles] = useState<Article[]>([]);
   const [viewedArticles, setViewedArticles] = useState<Article[]>([]);
@@ -58,8 +60,7 @@ export const YouScreen: React.FC = () => {
   };
 
   const handleSettingsPress = () => {
-    // TODO: Navigate to settings screen
-    console.log('Settings pressed');
+    navigation.navigate('Settings' as never);
   };
 
   const renderArticle = ({ item }: { item: Article }) => (
