@@ -67,6 +67,8 @@ export const SettingsScreen: React.FC = () => {
     autoplayVideos: true,
   });
 
+  const [showSharedWithYou, setShowSharedWithYou] = useState(true);
+
   const handleBackPress = () => {
     navigation.goBack();
   };
@@ -122,6 +124,14 @@ export const SettingsScreen: React.FC = () => {
     Alert.alert('About This App', 'Dal Gazette App v1.0.0\n\nYour source for campus news and updates.');
   };
 
+  const handleDismissSharedWithYou = () => {
+    setShowSharedWithYou(false);
+  };
+
+  const handleViewAllNotifications = () => {
+    Alert.alert('View All Notifications', 'Notification settings coming soon!');
+  };
+
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.safeArea} edges={['top']}>
@@ -138,15 +148,105 @@ export const SettingsScreen: React.FC = () => {
       </SafeAreaView>
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {/* Subscription Options */}
-        <SettingsItem
-          title="Subscribe"
-          onPress={handleSubscribe}
-        />
-        <SettingsItem
-          title="Restore Subscription"
-          onPress={handleRestoreSubscription}
-        />
+        {/* SHARED WITH YOU Section */}
+        {showSharedWithYou && (
+          <View style={styles.sectionContainer}>
+            <SectionHeader title="SHARED WITH YOU" />
+            <View style={styles.sharedWithYouContent}>
+              <Text style={styles.sharedWithYouText}>
+                No current shared articles. To see articles your contacts have shared, make sure you have 'Shared with You' enabled for this app, by navigating to your iOS device's Settings > Messages > Shared with You.
+              </Text>
+              <TouchableOpacity onPress={handleDismissSharedWithYou} style={styles.dismissButton}>
+                <Text style={styles.dismissButtonText}>Dismiss</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+
+        {/* GET CAUGHT UP Section */}
+        <View style={styles.sectionContainer}>
+          <SectionHeader title="GET CAUGHT UP" />
+          <View style={styles.notificationItem}>
+            <View style={styles.notificationContent}>
+              <Text style={styles.notificationTitle}>Breaking News</Text>
+              <Text style={styles.notificationSubtitle}>Urgent and important stories.</Text>
+            </View>
+            <Switch
+              value={notifications.breakingNews}
+              onValueChange={(value) => setNotifications(prev => ({ ...prev, breakingNews: value }))}
+              trackColor={{ false: '#E5E7EB', true: '#007AFF' }}
+              thumbColor="#FFFFFF"
+            />
+          </View>
+          <View style={styles.notificationItem}>
+            <View style={styles.notificationContent}>
+              <Text style={styles.notificationTitle}>Top Stories</Text>
+              <Text style={styles.notificationSubtitle}>The best of The Times.</Text>
+            </View>
+            <Switch
+              value={notifications.topStories}
+              onValueChange={(value) => setNotifications(prev => ({ ...prev, topStories: value }))}
+              trackColor={{ false: '#E5E7EB', true: '#007AFF' }}
+              thumbColor="#FFFFFF"
+            />
+          </View>
+          <View style={styles.notificationItem}>
+            <View style={styles.notificationContent}>
+              <Text style={styles.notificationTitle}>Morning Briefing</Text>
+              <Text style={styles.notificationSubtitle}>Catch up on the biggest news every morning.</Text>
+            </View>
+            <Switch
+              value={notifications.morningBriefing}
+              onValueChange={(value) => setNotifications(prev => ({ ...prev, morningBriefing: value }))}
+              trackColor={{ false: '#E5E7EB', true: '#007AFF' }}
+              thumbColor="#FFFFFF"
+            />
+          </View>
+          <View style={styles.notificationItem}>
+            <View style={styles.notificationContent}>
+              <Text style={styles.notificationTitle}>Business & Tech</Text>
+              <Text style={styles.notificationSubtitle}>Market-moving news and features. A few alerts a week.</Text>
+            </View>
+            <Switch
+              value={notifications.businessTech}
+              onValueChange={(value) => setNotifications(prev => ({ ...prev, businessTech: value }))}
+              trackColor={{ false: '#E5E7EB', true: '#007AFF' }}
+              thumbColor="#FFFFFF"
+            />
+          </View>
+          <View style={styles.notificationItem}>
+            <View style={styles.notificationContent}>
+              <Text style={styles.notificationTitle}>New York</Text>
+              <Text style={styles.notificationSubtitle}>Keep tabs on the pulse of the city.</Text>
+            </View>
+            <Switch
+              value={notifications.newYork}
+              onValueChange={(value) => setNotifications(prev => ({ ...prev, newYork: value }))}
+              trackColor={{ false: '#E5E7EB', true: '#007AFF' }}
+              thumbColor="#FFFFFF"
+            />
+          </View>
+          <TouchableOpacity onPress={handleViewAllNotifications} style={styles.viewAllButton}>
+            <Text style={styles.viewAllButtonText}>VIEW ALL NOTIFICATIONS ></Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* SETTINGS Section */}
+        <View style={styles.sectionContainer}>
+          <SectionHeader title="SETTINGS" />
+          <View style={styles.settingsContent}>
+            <Text style={styles.notSubscribedText}>NOT SUBSCRIBED</Text>
+            <Text style={styles.emailText}>t4x6stxgcj@privaterelay.appleid.com</Text>
+          </View>
+        </View>
+
+        {/* ACCOUNT Section */}
+        <View style={styles.sectionContainer}>
+          <SectionHeader title="ACCOUNT" />
+          <TouchableOpacity onPress={handleSubscribe} style={styles.subscribeButton}>
+            <Text style={styles.subscribeButtonText}>Subscribe</Text>
+          </TouchableOpacity>
+        </View>
 
         {/* App Settings Section */}
         <SectionHeader title="APP SETTINGS" />
@@ -171,8 +271,8 @@ export const SettingsScreen: React.FC = () => {
             <Switch
               value={appSettings.autoplayVideos}
               onValueChange={(value) => setAppSettings(prev => ({ ...prev, autoplayVideos: value }))}
-              trackColor={{ false: '#E5E7EB', true: '#000000' }}
-              thumbColor={appSettings.autoplayVideos ? '#FFFFFF' : '#FFFFFF'}
+              trackColor={{ false: '#E5E7EB', true: '#007AFF' }}
+              thumbColor="#FFFFFF"
             />
           }
         />
@@ -255,17 +355,115 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
+  sectionContainer: {
+    marginTop: 24,
+  },
   sectionHeader: {
     backgroundColor: '#F8F9FA',
     paddingHorizontal: 20,
     paddingVertical: 12,
-    marginTop: 24,
   },
   sectionHeaderText: {
     fontSize: 13,
     fontWeight: '600',
     color: '#6B7280',
     letterSpacing: 0.5,
+  },
+  sharedWithYouContent: {
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+  },
+  sharedWithYouText: {
+    fontSize: 16,
+    color: '#000000',
+    lineHeight: 22,
+    marginBottom: 12,
+  },
+  dismissButton: {
+    alignSelf: 'flex-start',
+  },
+  dismissButtonText: {
+    fontSize: 16,
+    color: '#007AFF',
+    textDecorationLine: 'underline',
+  },
+  notificationItem: {
+    backgroundColor: '#FFFFFF',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+  },
+  notificationContent: {
+    flex: 1,
+    marginRight: 16,
+  },
+  notificationTitle: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#000000',
+    marginBottom: 2,
+  },
+  notificationSubtitle: {
+    fontSize: 14,
+    color: '#6B7280',
+  },
+  viewAllButton: {
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+  },
+  viewAllButtonText: {
+    fontSize: 16,
+    color: '#007AFF',
+    textDecorationLine: 'underline',
+  },
+  settingsContent: {
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+  },
+  notSubscribedText: {
+    fontSize: 16,
+    color: '#000000',
+    marginBottom: 4,
+  },
+  emailText: {
+    fontSize: 16,
+    color: '#6B7280',
+  },
+  subscribeButton: {
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+  },
+  subscribeButtonText: {
+    fontSize: 16,
+    color: '#000000',
+    fontWeight: '500',
+  },
+  footer: {
+    paddingHorizontal: 20,
+    paddingVertical: 24,
+    alignItems: 'center',
+  },
+  footerText: {
+    fontSize: 12,
+    color: '#9CA3AF',
+    textAlign: 'center',
+    marginBottom: 4,
   },
   settingsItem: {
     backgroundColor: '#FFFFFF',
@@ -291,16 +489,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#6B7280',
     marginTop: 2,
-  },
-  footer: {
-    paddingHorizontal: 20,
-    paddingVertical: 24,
-    alignItems: 'center',
-  },
-  footerText: {
-    fontSize: 12,
-    color: '#9CA3AF',
-    textAlign: 'center',
-    marginBottom: 4,
   },
 });
