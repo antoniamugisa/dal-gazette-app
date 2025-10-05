@@ -21,7 +21,7 @@ export const BottomTabBar = () => {
           paddingTop: 8,
           height: 60,
         },
-        tabBarActiveTintColor: '#FDB913',
+        tabBarActiveTintColor: '#FFD400', // Beak Gold
         tabBarInactiveTintColor: '#9CA3AF',
         tabBarLabelStyle: {
           fontSize: 12,

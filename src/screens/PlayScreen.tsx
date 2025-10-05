@@ -45,7 +45,7 @@ export const PlayScreen: React.FC = () => {
         category: 'trivia',
         difficulty: 'medium',
         icon: <Brain size={24} color="#FFFFFF" />,
-        color: '#FDB913',
+        color: '#FFD400', // Beak Gold
         highScore: 850,
       },
       {
@@ -157,7 +157,7 @@ export const PlayScreen: React.FC = () => {
       <SafeAreaView style={styles.safeArea} edges={['top']}>
         <View style={styles.header}>
           <View style={styles.headerContent}>
-            <Gamepad2 size={24} color="#FDB913" />
+            <Gamepad2 size={24} color="#FFD400" />
             <Text style={styles.headerTitle}>Play</Text>
           </View>
         </View>
@@ -179,7 +179,7 @@ export const PlayScreen: React.FC = () => {
             activeOpacity={0.7}
           >
             <View style={styles.featuredContent}>
-              <View style={[styles.featuredIcon, { backgroundColor: games[0]?.color || '#FDB913' }]}>
+              <View style={[styles.featuredIcon, { backgroundColor: games[0]?.color || '#FFD400' }]}>
                 {games[0]?.icon}
               </View>
               <View style={styles.featuredInfo}>
@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 20,
     borderWidth: 2,
-    borderColor: '#FDB913',
+    borderColor: '#FFD400',
   },
   featuredContent: {
     flexDirection: 'row',
@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
   },
   featuredBadge: {
     alignSelf: 'flex-start',
-    backgroundColor: '#FDB913',
+    backgroundColor: '#FFD400', // Beak Gold
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,
@@ -368,6 +368,6 @@ const styles = StyleSheet.create({
   highScore: {
     fontSize: 12,
     fontWeight: '500',
-    color: '#FDB913',
+    color: '#FFD400',
   },
 });

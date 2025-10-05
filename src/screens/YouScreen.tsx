@@ -117,7 +117,7 @@ export const YouScreen: React.FC = () => {
         {renderPlaylist(
           "Saved Articles",
           savedArticles,
-          <Bookmark size={20} color="#FDB913" />,
+          <Bookmark size={20} color="#FFD400" />,
           "No saved articles yet. Bookmark articles to see them here."
         )}
 

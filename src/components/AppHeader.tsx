@@ -39,7 +39,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             onPress={onSearchPress}
             activeOpacity={0.7}
           >
-            <Search size={24} color="#6B7280" />
+            <Search size={24} color="#242424" />
           </TouchableOpacity>
         )}
       </View>
@@ -78,6 +78,6 @@ const styles = StyleSheet.create({
     marginTop: -20,
     padding: 8,
     borderRadius: 20,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: '#FFD400', // Beak Gold
   },
 });

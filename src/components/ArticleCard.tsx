@@ -47,7 +47,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
           style={styles.image}
           resizeMode="cover"
         />
-        <View style={[styles.categoryTag, { backgroundColor: CATEGORY_COLORS[article.category] }]}>
+        <View style={[styles.categoryTag, { backgroundColor: '#242424' }]}>
           <Text style={styles.categoryText}>{article.category}</Text>
         </View>
       </View>
@@ -133,11 +133,11 @@ const styles = StyleSheet.create({
   },
   author: {
     fontSize: 12,
-    color: '#9CA3AF',
+    color: '#9CA3AF', // Keep gray for author/time info
     fontWeight: '500',
   },
   timeAgo: {
     fontSize: 12,
-    color: '#9CA3AF',
+    color: '#9CA3AF', // Keep gray for author/time info
   },
 });

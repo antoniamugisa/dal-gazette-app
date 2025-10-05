@@ -2,11 +2,11 @@ import { AppTheme } from '../types';
 
 export const LIGHT_THEME: AppTheme = {
   colors: {
-    primary: '#FDB913', // Dalhousie Gold
-    secondary: '#000000', // Black
-    background: '#FFFFFF',
+    primary: '#FFD400', // Beak Gold
+    secondary: '#242424', // Wingtip Black
+    background: '#FFFFFF', // Cloud White
     surface: '#F8F9FA',
-    text: '#000000',
+    text: '#242424', // Wingtip Black
     textSecondary: '#6B7280',
     border: '#E5E7EB',
     accent: '#F3F4F6',
@@ -16,11 +16,11 @@ export const LIGHT_THEME: AppTheme = {
 
 export const DARK_THEME: AppTheme = {
   colors: {
-    primary: '#FDB913', // Dalhousie Gold
-    secondary: '#FFFFFF', // White
-    background: '#000000',
+    primary: '#FFD400', // Beak Gold
+    secondary: '#FFFFFF', // Cloud White
+    background: '#242424', // Wingtip Black
     surface: '#1F2937',
-    text: '#FFFFFF',
+    text: '#FFFFFF', // Cloud White
     textSecondary: '#9CA3AF',
     border: '#374151',
     accent: '#111827',
@@ -29,10 +29,10 @@ export const DARK_THEME: AppTheme = {
 };
 
 export const CATEGORY_COLORS = {
-  News: '#3B82F6',
-  'Arts & Culture': '#A855F7',
-  Opinions: '#10B981',
-  Sports: '#F97316',
+  News: '#FFD400', // Beak Gold
+  'Arts & Culture': '#A855F7', // Purple
+  Opinions: '#10B981', // Green
+  Sports: '#F97316', // Orange
 } as const;
 
 export const CATEGORIES = [

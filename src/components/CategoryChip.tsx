@@ -29,8 +29,9 @@ export const CategoryChip: React.FC<CategoryChipProps> = ({
       style={[
         styles.chip,
         {
-          backgroundColor: isSelected ? color : '#F3F4F6',
-          borderColor: isSelected ? color : '#E5E7EB',
+          backgroundColor: 'transparent',
+          borderColor: isSelected ? '#FFD400' : '#E5E7EB',
+          borderWidth: isSelected ? 2 : 1,
         },
         style,
       ]}
@@ -41,7 +42,7 @@ export const CategoryChip: React.FC<CategoryChipProps> = ({
         style={[
           styles.text,
           {
-            color: isSelected ? '#FFFFFF' : '#6B7280',
+            color: isSelected ? '#FFD400' : '#6B7280',
             fontWeight: isSelected ? '600' : '500',
           },
           textStyle,

@@ -4,25 +4,25 @@ A mobile-first newspaper app for Dalhousie University students and faculty, brin
 
 ## Features
 
-### 🏠 Home Screen
+### Home Screen
 - **Featured Stories**: Highlighted articles with large images
 - **Latest News Feed**: Scrollable list of recent articles
 - **Category Filtering**: Filter by News, Arts & Culture, Opinions, and Sports
 - **Search Functionality**: Search articles by title, content, or author
 - **Pull-to-Refresh**: Update content with a simple pull gesture
 
-### 📱 Navigation
+### Navigation
 - **Bottom Tab Bar**: Easy access to Home, News, Sports, and Culture sections
 - **Article Detail View**: Full-screen article reading experience
 - **Smooth Animations**: Polished transitions between screens
 
-### 🎨 Design
+### Design
 - **Dalhousie Branding**: Official Dalhousie gold and black color scheme
 - **Mobile-First**: Optimized for mobile devices with touch-friendly interface
 - **Category Colors**: Distinct colors for each content category
 - **Modern UI**: Clean, card-based design with proper spacing and typography
 
-### 📰 Content
+### Content
 - **Real-time Updates**: Fresh content from the Dal Gazette website
 - **Article Metadata**: Author, publish date, and category information
 - **Image Support**: High-quality images for articles
@@ -151,4 +151,4 @@ For questions or suggestions, please contact the development team or open an iss
 
 ---
 
-**Bringing real journalism and reading comprehension back to campus, one article at a time.** 📚✨
+**Bringing real journalism and reading comprehension back to campus, one article at a time.**

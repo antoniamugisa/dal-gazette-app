@@ -15,7 +15,7 @@ interface LoadingSpinnerProps {
 export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   message = 'Loading...',
   size = 'large',
-  color = '#FDB913',
+  color = '#FFD400', // Beak Gold
 }) => {
   return (
     <View style={styles.container}>

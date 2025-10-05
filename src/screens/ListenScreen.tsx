@@ -119,7 +119,7 @@ export const ListenScreen: React.FC = () => {
       <SafeAreaView style={styles.safeArea} edges={['top']}>
         <View style={styles.header}>
           <View style={styles.headerContent}>
-            <Headphones size={24} color="#FDB913" />
+            <Headphones size={24} color="#FFD400" />
             <Text style={styles.headerTitle}>Listen</Text>
           </View>
         </View>
@@ -222,10 +222,10 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: '#FDB913',
+    backgroundColor: '#FFD400', // Beak Gold
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#FDB913',
+    shadowColor: '#FFD400',
     shadowOffset: {
       width: 0,
       height: 2,

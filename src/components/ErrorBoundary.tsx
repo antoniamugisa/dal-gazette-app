@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   retryButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FDB913',
+    backgroundColor: '#FFD400', // Beak Gold
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 8,
