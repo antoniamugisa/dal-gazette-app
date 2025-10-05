@@ -14,6 +14,7 @@ import { CategoryChip } from '../components/CategoryChip';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { AppHeader } from '../components/AppHeader';
 import { SearchModal } from '../components/SearchModal';
+import { SectionsList } from '../components/SectionsList';
 import { MOCK_ARTICLES } from '../constants/mockData';
 import { CATEGORIES } from '../constants/theme';
 import { Article } from '../types';
@@ -114,31 +115,38 @@ export const HomeScreen: React.FC = () => {
           </ScrollView>
         </View>
 
-        {/* Featured Article */}
-        {filteredArticles.length > 0 && (
-          <View style={styles.featuredSection}>
-            <Text style={styles.sectionTitle}>Featured Story</Text>
-            <ArticleCard
-              article={filteredArticles[0]}
-              onPress={handleArticlePress}
-              style={styles.featuredCard}
-            />
-          </View>
-        )}
+        {/* Content based on selected category */}
+        {selectedCategory === 'Sections' ? (
+          <SectionsList />
+        ) : (
+          <>
+            {/* Featured Article */}
+            {filteredArticles.length > 0 && (
+              <View style={styles.featuredSection}>
+                <Text style={styles.sectionTitle}>Featured Story</Text>
+                <ArticleCard
+                  article={filteredArticles[0]}
+                  onPress={handleArticlePress}
+                  style={styles.featuredCard}
+                />
+              </View>
+            )}
 
-        {/* Articles List */}
-        <View style={styles.articlesSection}>
-          <Text style={styles.sectionTitle}>
-            {selectedCategory ? selectedCategory : 'Latest News'}
-          </Text>
-          <FlatList
-            data={filteredArticles.slice(1)}
-            renderItem={renderArticle}
-            keyExtractor={item => item.id}
-            scrollEnabled={false}
-            showsVerticalScrollIndicator={false}
-          />
-        </View>
+            {/* Articles List */}
+            <View style={styles.articlesSection}>
+              <Text style={styles.sectionTitle}>
+                {selectedCategory ? selectedCategory : 'Latest News'}
+              </Text>
+              <FlatList
+                data={filteredArticles.slice(1)}
+                renderItem={renderArticle}
+                keyExtractor={item => item.id}
+                scrollEnabled={false}
+                showsVerticalScrollIndicator={false}
+              />
+            </View>
+          </>
+        )}
       </ScrollView>
 
       {/* Search Modal */}

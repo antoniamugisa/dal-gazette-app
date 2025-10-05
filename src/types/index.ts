@@ -3,7 +3,7 @@ export interface Article {
   title: string;
   excerpt: string;
   content: string;
-  category: 'News' | 'Arts & Culture' | 'Opinions' | 'Sports';
+  category: 'News' | 'Opinions' | 'Arts & Culture' | 'Sports' | 'Sections';
   author: string;
   publishedAt: Date;
   imageUrl: string;

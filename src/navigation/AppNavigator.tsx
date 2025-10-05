@@ -2,6 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { BottomTabBar } from '../components/BottomTabBar';
 import { ArticleDetailScreen } from '../screens/ArticleDetailScreen';
+import { TopicArticlesScreen } from '../screens/TopicArticlesScreen';
 import { useAppContext } from '../context/AppContext';
 
 const Stack = createStackNavigator();
@@ -23,9 +24,12 @@ export const AppNavigator = () => {
           presentation: 'modal',
           gestureEnabled: true,
         }}
-        initialParams={{
-          article: selectedArticle,
-          onBack: () => setSelectedArticle(null),
+      />
+      <Stack.Screen
+        name="TopicArticles"
+        component={TopicArticlesScreen}
+        options={{
+          headerShown: false,
         }}
       />
     </Stack.Navigator>

@@ -9,19 +9,34 @@ import {
   Share,
   Alert,
 } from 'react-native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import { ArrowLeft, Share2, Bookmark, Clock, User } from 'lucide-react-native';
 import { Article } from '../types';
 import { CATEGORY_COLORS } from '../constants/theme';
+import { useAppContext } from '../context/AppContext';
 
 interface ArticleDetailScreenProps {
-  article: Article;
-  onBack: () => void;
+  route?: any;
+  navigation?: any;
 }
 
-export const ArticleDetailScreen: React.FC<ArticleDetailScreenProps> = ({
-  article,
-  onBack,
-}) => {
+export const ArticleDetailScreen: React.FC<ArticleDetailScreenProps> = () => {
+  const route = useRoute();
+  const navigation = useNavigation();
+  const { selectedArticle, setSelectedArticle } = useAppContext();
+  
+  const article = selectedArticle || route.params?.article;
+  
+  const handleBack = () => {
+    setSelectedArticle(null);
+    navigation.goBack();
+  };
+
+  // Safety check - if no article, go back
+  if (!article) {
+    handleBack();
+    return null;
+  }
   const handleShare = async () => {
     try {
       await Share.share({
@@ -53,7 +68,7 @@ export const ArticleDetailScreen: React.FC<ArticleDetailScreenProps> = ({
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={onBack} style={styles.backButton}>
+        <TouchableOpacity onPress={handleBack} style={styles.backButton}>
           <ArrowLeft size={24} color="#000000" />
         </TouchableOpacity>
         <View style={styles.headerActions}>

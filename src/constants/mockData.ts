@@ -72,5 +72,29 @@ export const MOCK_ARTICLES: Article[] = [
     imageUrl: 'https://via.placeholder.com/400x250/A855F7/FFFFFF?text=Winter+Concert',
     tags: ['music', 'concert', 'performance'],
     url: 'https://dalgazette.com/winter-concert'
+  },
+  {
+    id: '7',
+    title: 'Student Government Elections Begin',
+    excerpt: 'Candidates for DSU executive positions present their platforms to the student body.',
+    content: 'Full article content about student government elections...',
+    category: 'Sections',
+    author: 'DSU Reporter',
+    publishedAt: new Date('2024-01-09T12:00:00Z'),
+    imageUrl: 'https://via.placeholder.com/400x250/6B7280/FFFFFF?text=Student+Government',
+    tags: ['elections', 'student government', 'dsu'],
+    url: 'https://dalgazette.com/student-elections'
+  },
+  {
+    id: '8',
+    title: 'Campus Dining Updates and New Options',
+    excerpt: 'New food vendors and updated dining hall hours for the winter semester.',
+    content: 'Full article content about campus dining updates...',
+    category: 'Sections',
+    author: 'Campus Life',
+    publishedAt: new Date('2024-01-08T15:30:00Z'),
+    imageUrl: 'https://via.placeholder.com/400x250/6B7280/FFFFFF?text=Campus+Dining',
+    tags: ['dining', 'campus life', 'food'],
+    url: 'https://dalgazette.com/campus-dining'
   }
 ];

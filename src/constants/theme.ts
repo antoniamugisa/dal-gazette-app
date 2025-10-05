@@ -37,7 +37,8 @@ export const CATEGORY_COLORS = {
 
 export const CATEGORIES = [
   { id: 'news', name: 'News', color: CATEGORY_COLORS.News, icon: 'newspaper' },
-  { id: 'arts-culture', name: 'Arts & Culture', color: CATEGORY_COLORS['Arts & Culture'], icon: 'palette' },
   { id: 'opinions', name: 'Opinions', color: CATEGORY_COLORS.Opinions, icon: 'message-circle' },
+  { id: 'arts-culture', name: 'Arts & Culture', color: CATEGORY_COLORS['Arts & Culture'], icon: 'palette' },
   { id: 'sports', name: 'Sports', color: CATEGORY_COLORS.Sports, icon: 'trophy' },
+  { id: 'sections', name: 'Sections', color: '#6B7280', icon: 'grid' },
 ] as const;
