@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -55,6 +55,9 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({ title }) => (
 
 export const SettingsScreen: React.FC = () => {
   const navigation = useNavigation();
+  const scrollViewRef = useRef<ScrollView>(null);
+  const settingsSectionRef = useRef<View>(null);
+  
   const [notifications, setNotifications] = useState({
     news: true,
     topStories: true,
@@ -125,6 +128,16 @@ export const SettingsScreen: React.FC = () => {
     Alert.alert('About This App', 'Dal Gazette App v1.0.0\n\nYour source for campus news and updates.');
   };
 
+  const handleSettingsIconPress = () => {
+    settingsSectionRef.current?.measureLayout(
+      scrollViewRef.current as any,
+      (x, y) => {
+        scrollViewRef.current?.scrollTo({ y: y - 50, animated: true });
+      },
+      () => {}
+    );
+  };
+
 
   return (
     <View style={styles.container}>
@@ -135,13 +148,13 @@ export const SettingsScreen: React.FC = () => {
             <ArrowLeft size={24} color="#000000" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>My Account</Text>
-          <TouchableOpacity style={styles.settingsButton}>
+          <TouchableOpacity style={styles.settingsButton} onPress={handleSettingsIconPress}>
             <Settings size={24} color="#6B7280" />
           </TouchableOpacity>
         </View>
       </SafeAreaView>
 
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView ref={scrollViewRef} style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* GET CAUGHT UP Section */}
         <View style={styles.sectionContainer}>
           <SectionHeader title="GET CAUGHT UP" />
@@ -232,7 +245,7 @@ export const SettingsScreen: React.FC = () => {
         </View>
 
         {/* SETTINGS Section */}
-        <View style={styles.sectionContainer}>
+        <View ref={settingsSectionRef} style={styles.sectionContainer}>
           <SectionHeader title="SETTINGS" />
         </View>
 
