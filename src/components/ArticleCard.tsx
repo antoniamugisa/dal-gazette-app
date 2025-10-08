@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { Article } from '../types';
 import { CATEGORY_COLORS } from '../constants/theme';
+import { useAppContext } from '../context/AppContext';
 
 interface ArticleCardProps {
   article: Article;
@@ -24,6 +25,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
   onPress,
   style,
 }) => {
+  const { theme } = useAppContext();
   const getTimeAgo = (date: Date): string => {
     // Safety check for invalid dates
     if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
@@ -42,7 +44,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
 
   return (
     <TouchableOpacity
-      style={[styles.container, style]}
+      style={[styles.container, { backgroundColor: theme.colors.surface }, style]}
       onPress={() => onPress(article)}
       activeOpacity={0.8}
     >
@@ -52,22 +54,22 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
           style={styles.image}
           resizeMode="cover"
         />
-        <View style={[styles.categoryTag, { backgroundColor: '#242424' }]}>
+        <View style={[styles.categoryTag, { backgroundColor: theme.colors.secondary }]}>
           <Text style={styles.categoryText}>{article.category}</Text>
         </View>
       </View>
       
       <View style={styles.content}>
-        <Text style={styles.title} numberOfLines={2}>
+        <Text style={[styles.title, { color: theme.colors.text }]} numberOfLines={2}>
           {article.title}
         </Text>
-        <Text style={styles.excerpt} numberOfLines={3}>
+        <Text style={[styles.excerpt, { color: theme.colors.textSecondary }]} numberOfLines={3}>
           {article.excerpt}
         </Text>
         
         <View style={styles.footer}>
-          <Text style={styles.author}>{article.author}</Text>
-          <Text style={styles.timeAgo}>{getTimeAgo(article.publishedAt)}</Text>
+          <Text style={[styles.author, { color: theme.colors.textSecondary }]}>{article.author}</Text>
+          <Text style={[styles.timeAgo, { color: theme.colors.textSecondary }]}>{getTimeAgo(article.publishedAt)}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -76,7 +78,6 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#FFFFFF',
     borderRadius: 12,
     marginHorizontal: 16,
     marginVertical: 8,
@@ -121,13 +122,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#000000',
     lineHeight: 24,
     marginBottom: 8,
   },
   excerpt: {
     fontSize: 14,
-    color: '#6B7280',
     lineHeight: 20,
     marginBottom: 12,
   },
@@ -138,11 +137,9 @@ const styles = StyleSheet.create({
   },
   author: {
     fontSize: 12,
-    color: '#9CA3AF', // Keep gray for author/time info
     fontWeight: '500',
   },
   timeAgo: {
     fontSize: 12,
-    color: '#9CA3AF', // Keep gray for author/time info
   },
 });

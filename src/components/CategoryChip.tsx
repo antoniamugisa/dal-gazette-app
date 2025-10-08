@@ -6,6 +6,7 @@ import {
   ViewStyle,
   TextStyle,
 } from 'react-native';
+import { useAppContext } from '../context/AppContext';
 
 interface CategoryChipProps {
   label: string;
@@ -24,13 +25,15 @@ export const CategoryChip: React.FC<CategoryChipProps> = ({
   style,
   textStyle,
 }) => {
+  const { theme } = useAppContext();
+  
   return (
     <TouchableOpacity
       style={[
         styles.chip,
         {
           backgroundColor: 'transparent',
-          borderColor: isSelected ? '#000000' : '#E5E7EB',
+          borderColor: isSelected ? theme.colors.primary : theme.colors.border,
           borderWidth: isSelected ? 2 : 1,
         },
         style,
@@ -42,7 +45,7 @@ export const CategoryChip: React.FC<CategoryChipProps> = ({
         style={[
           styles.text,
           {
-            color: isSelected ? '#000000' : '#6B7280',
+            color: isSelected ? theme.colors.primary : theme.colors.textSecondary,
             fontWeight: isSelected ? '600' : '500',
           },
           textStyle,

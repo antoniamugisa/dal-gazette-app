@@ -5,24 +5,27 @@ import { HomeScreen } from '../screens/HomeScreen';
 import { ListenScreen } from '../screens/ListenScreen';
 import { PlayScreen } from '../screens/PlayScreen';
 import { YouScreen } from '../screens/YouScreen';
+import { useAppContext } from '../context/AppContext';
 
 const Tab = createBottomTabNavigator();
 
 export const BottomTabBar = () => {
+  const { theme } = useAppContext();
+  
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: '#FFFFFF',
-          borderTopColor: '#E5E7EB',
+          backgroundColor: theme.colors.surface,
+          borderTopColor: theme.colors.border,
           borderTopWidth: 1,
           paddingBottom: 8,
           paddingTop: 8,
           height: 60,
         },
-        tabBarActiveTintColor: '#FFD400', // Beak Gold
-        tabBarInactiveTintColor: '#9CA3AF',
+        tabBarActiveTintColor: theme.colors.primary,
+        tabBarInactiveTintColor: theme.colors.textSecondary,
         tabBarLabelStyle: {
           fontSize: 12,
           fontWeight: '600',

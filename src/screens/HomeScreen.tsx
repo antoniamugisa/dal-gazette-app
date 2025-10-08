@@ -29,7 +29,8 @@ export const HomeScreen: React.FC = () => {
     scrapedArticles,
     isLoadingArticles,
     refreshArticles,
-    loadArticleContent
+    loadArticleContent,
+    theme
   } = useAppContext();
   const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -107,7 +108,7 @@ export const HomeScreen: React.FC = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <ScrollView
         style={styles.scrollView}
         refreshControl={
@@ -118,7 +119,7 @@ export const HomeScreen: React.FC = () => {
         <AppHeader onSearchPress={handleSearchPress} />
 
         {/* Category Chips */}
-        <View style={styles.categoriesContainer}>
+        <View style={[styles.categoriesContainer, { backgroundColor: theme.colors.surface, borderBottomColor: theme.colors.border }]}>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -135,8 +136,8 @@ export const HomeScreen: React.FC = () => {
           <>
             {/* Featured Article */}
             {filteredArticles.length > 0 && (
-              <View style={styles.featuredSection}>
-                <Text style={styles.sectionTitle}>Featured Story</Text>
+              <View style={[styles.featuredSection, { backgroundColor: theme.colors.surface }]}>
+                <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Featured Story</Text>
                 <ArticleCard
                   article={filteredArticles[0]}
                   onPress={handleArticlePress}
@@ -146,8 +147,8 @@ export const HomeScreen: React.FC = () => {
             )}
 
             {/* Articles List */}
-            <View style={styles.articlesSection}>
-              <Text style={styles.sectionTitle}>
+            <View style={[styles.articlesSection, { backgroundColor: theme.colors.surface }]}>
+              <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>
                 {selectedCategory ? selectedCategory : 'Latest News'}
               </Text>
               <FlatList
@@ -176,29 +177,24 @@ export const HomeScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
   },
   scrollView: {
     flex: 1,
   },
   categoriesContainer: {
-    backgroundColor: '#FFFFFF',
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
   },
   categoriesScroll: {
     paddingHorizontal: 16,
   },
   featuredSection: {
-    backgroundColor: '#FFFFFF',
     paddingVertical: 16,
     marginTop: 8,
   },
   sectionTitle: {
     fontSize: 20,
     fontWeight: '700',
-    color: '#000000',
     marginBottom: 12,
     paddingHorizontal: 16,
   },
@@ -206,7 +202,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
   },
   articlesSection: {
-    backgroundColor: '#FFFFFF',
     paddingVertical: 16,
     marginTop: 8,
   },

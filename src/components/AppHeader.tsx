@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Search } from 'lucide-react-native';
+import { useAppContext } from '../context/AppContext';
 
 const { width } = Dimensions.get('window');
 
@@ -21,9 +22,11 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   showLogo = true,
   onSearchPress,
 }) => {
+  const { theme } = useAppContext();
+  
   return (
-    <SafeAreaView style={styles.safeArea} edges={['top']}>
-      <View style={styles.container}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.colors.surface }]} edges={['top']}>
+      <View style={[styles.container, { backgroundColor: theme.colors.surface, borderBottomColor: theme.colors.border }]}>
         {showLogo && (
           <View style={styles.logoContainer}>
             <Image 
@@ -35,11 +38,11 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
         )}
         {onSearchPress && (
           <TouchableOpacity 
-            style={styles.searchButton}
+            style={[styles.searchButton, { backgroundColor: theme.colors.primary }]}
             onPress={onSearchPress}
             activeOpacity={0.7}
           >
-            <Search size={24} color="#242424" />
+            <Search size={24} color={theme.colors.secondary} />
           </TouchableOpacity>
         )}
       </View>
@@ -49,10 +52,8 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 
 const styles = StyleSheet.create({
   safeArea: {
-    backgroundColor: '#FFFFFF',
   },
   container: {
-    backgroundColor: '#FFFFFF',
     paddingHorizontal: 16,
     paddingTop: 1,
     paddingBottom: 16,
@@ -60,7 +61,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
   },
   logoContainer: {
     alignItems: 'center',
@@ -78,6 +78,5 @@ const styles = StyleSheet.create({
     marginTop: -20,
     padding: 8,
     borderRadius: 20,
-    backgroundColor: '#FFD400', // Beak Gold
   },
 });
