@@ -1,0 +1,19 @@
+{
+  "name": "dal-gazette-scraper",
+  "version": "1.0.0",
+  "description": "Backend scraper service for Dal Gazette",
+  "main": "backend-scraper.js",
+  "scripts": {
+    "start": "node backend-scraper.js",
+    "dev": "nodemon backend-scraper.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "axios": "^1.6.0",
+    "cheerio": "^1.0.0-rc.12",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
