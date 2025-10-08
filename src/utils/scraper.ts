@@ -134,8 +134,8 @@ const getRealisticMockArticles = (): Article[] => {
       excerpt: 'Students and faculty express concerns over recent university decisions in growing petition.',
       content: 'A petition calling for the resignation of Dalhousie University President has gained significant traction, with over 1,000 signatures from students, faculty, and alumni. The petition cites concerns over recent budget cuts, program closures, and what petitioners describe as a lack of transparency in university governance. University administration has responded by scheduling town hall meetings to address community concerns.',
       category: 'News',
-      author: 'Michael Chen',
-      publishedAt: new Date(Date.now() - 3 * 60 * 60 * 1000), // 3 hours ago
+      author: 'Claire Kelly',
+      publishedAt: new Date('2025-10-02T10:00:00Z'), // 2 October 2025
       imageUrl: undefined,
       tags: ['administration', 'governance', 'student voice'],
       url: 'https://dalgazette.com/president-petition'

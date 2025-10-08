@@ -11,7 +11,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Play, Pause, Headphones, Clock, User } from 'lucide-react-native';
 import { LoadingSpinner } from '../components/LoadingSpinner';
-import { MOCK_ARTICLES } from '../constants/mockData';
+import { useAppContext } from '../context/AppContext';
 import { Article } from '../types';
 
 // Audio article interface
@@ -21,6 +21,7 @@ interface AudioArticle extends Article {
 }
 
 export const ListenScreen: React.FC = () => {
+  const { scrapedArticles } = useAppContext();
   const [audioArticles, setAudioArticles] = useState<AudioArticle[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -28,12 +29,12 @@ export const ListenScreen: React.FC = () => {
 
   useEffect(() => {
     loadAudioArticles();
-  }, []);
+  }, [scrapedArticles]);
 
   const loadAudioArticles = async () => {
     setLoading(true);
     // Convert regular articles to audio articles with mock duration
-    const audioContent = MOCK_ARTICLES.map((article, index) => ({
+    const audioContent = scrapedArticles.map((article, index) => ({
       ...article,
       duration: `${Math.floor(Math.random() * 20) + 5}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}`,
       audioUrl: `https://example.com/audio/${article.id}.mp3`,

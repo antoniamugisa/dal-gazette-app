@@ -13,13 +13,12 @@ import { useNavigation } from '@react-navigation/native';
 import { Settings, Bookmark, Eye } from 'lucide-react-native';
 import { ArticleCard } from '../components/ArticleCard';
 import { LoadingSpinner } from '../components/LoadingSpinner';
-import { MOCK_ARTICLES } from '../constants/mockData';
-import { Article } from '../types';
 import { useAppContext } from '../context/AppContext';
+import { Article } from '../types';
 
 export const YouScreen: React.FC = () => {
   const navigation = useNavigation();
-  const { bookmarkedArticles } = useAppContext();
+  const { bookmarkedArticles, scrapedArticles } = useAppContext();
   const [savedArticles, setSavedArticles] = useState<Article[]>([]);
   const [viewedArticles, setViewedArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,16 +29,16 @@ export const YouScreen: React.FC = () => {
 
   useEffect(() => {
     loadArticles();
-  }, [bookmarkedArticles]);
+  }, [bookmarkedArticles, scrapedArticles]);
 
   const loadArticles = async () => {
     setLoading(true);
     
     // Get saved articles (bookmarked)
-    const saved = MOCK_ARTICLES.filter(article => bookmarkedArticles.includes(article.id));
+    const saved = scrapedArticles.filter(article => bookmarkedArticles.includes(article.id));
     
     // Mock viewed articles (in a real app, this would come from user history)
-    const viewed = MOCK_ARTICLES.slice(0, 3); // Show first 3 as "viewed"
+    const viewed = scrapedArticles.slice(0, 3); // Show first 3 as "viewed"
     
     setTimeout(() => {
       setSavedArticles(saved);

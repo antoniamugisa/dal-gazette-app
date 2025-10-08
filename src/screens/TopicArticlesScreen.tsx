@@ -12,8 +12,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowLeft } from 'lucide-react-native';
 import { ArticleCard } from '../components/ArticleCard';
 import { LoadingSpinner } from '../components/LoadingSpinner';
-import { MOCK_ARTICLES } from '../constants/mockData';
 import { Article } from '../types';
+import { useAppContext } from '../context/AppContext';
 
 interface TopicArticlesScreenProps {
   route?: any;
@@ -23,6 +23,7 @@ interface TopicArticlesScreenProps {
 export const TopicArticlesScreen: React.FC<TopicArticlesScreenProps> = () => {
   const route = useRoute();
   const navigation = useNavigation();
+  const { scrapedArticles, isLoadingArticles, refreshArticles } = useAppContext();
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -32,12 +33,12 @@ export const TopicArticlesScreen: React.FC<TopicArticlesScreenProps> = () => {
 
   useEffect(() => {
     loadArticles();
-  }, [topicId]);
+  }, [topicId, scrapedArticles]);
 
   const loadArticles = async () => {
     setLoading(true);
     // Filter articles based on topic
-    const filteredArticles = MOCK_ARTICLES.filter(article => {
+    const filteredArticles = scrapedArticles.filter(article => {
       // Simple filtering based on topic - in a real app, this would be more sophisticated
       const topicKeywords = getTopicKeywords(topicId);
       return topicKeywords.some(keyword => 
@@ -79,7 +80,7 @@ export const TopicArticlesScreen: React.FC<TopicArticlesScreenProps> = () => {
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await loadArticles();
+    await refreshArticles();
     setRefreshing(false);
   };
 
@@ -92,7 +93,7 @@ export const TopicArticlesScreen: React.FC<TopicArticlesScreenProps> = () => {
     <ArticleCard article={item} onPress={handleArticlePress} />
   );
 
-  if (loading) {
+  if (loading || isLoadingArticles) {
     return <LoadingSpinner message={`Loading ${topicName} articles...`} />;
   }
 
