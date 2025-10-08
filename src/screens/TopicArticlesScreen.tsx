@@ -27,8 +27,8 @@ export const TopicArticlesScreen: React.FC<TopicArticlesScreenProps> = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const topicName = route.params?.topicName || 'Topic';
-  const topicId = route.params?.topicId || '';
+  const topicName = (route.params as any)?.topicName || 'Topic';
+  const topicId = (route.params as any)?.topicId || '';
 
   useEffect(() => {
     loadArticles();

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { Article } from '../types';
-import { LIGHT_THEME, DARK_THEME, AppTheme } from '../constants/theme';
+import { Article, AppTheme } from '../types';
+import { LIGHT_THEME, DARK_THEME } from '../constants/theme';
 import { scrapeDalGazette, scrapeArticleContent } from '../utils/scraper';
 
 interface AppContextType {
@@ -41,7 +41,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [isLoadingArticles, setIsLoadingArticles] = useState(false);
 
   const toggleBookmark = (articleId: string) => {
-    setBookmarkedArticles(prev => 
+    setBookmarkedArticles((prev: string[]) => 
       prev.includes(articleId) 
         ? prev.filter(id => id !== articleId)
         : [...prev, articleId]
@@ -71,7 +71,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     }
 
     try {
-      const content = await scrapeArticleContent(article.url);
+      const content = await scrapeArticleContent(article.url || '');
       setScrapedArticles(prev => 
         prev.map(a => 
           a.id === article.id 

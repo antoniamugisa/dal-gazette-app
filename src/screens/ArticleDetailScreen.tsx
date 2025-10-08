@@ -25,7 +25,7 @@ export const ArticleDetailScreen: React.FC<ArticleDetailScreenProps> = () => {
   const navigation = useNavigation();
   const { selectedArticle, setSelectedArticle } = useAppContext();
   
-  const article = selectedArticle || route.params?.article;
+  const article = selectedArticle || (route.params as any)?.article;
   
   const handleBack = () => {
     setSelectedArticle(null);
@@ -85,7 +85,7 @@ export const ArticleDetailScreen: React.FC<ArticleDetailScreenProps> = () => {
         {/* Hero Image */}
         <View style={styles.imageContainer}>
           <Image source={{ uri: article.imageUrl }} style={styles.heroImage} />
-          <View style={[styles.categoryTag, { backgroundColor: CATEGORY_COLORS[article.category] }]}>
+          <View style={[styles.categoryTag, { backgroundColor: (CATEGORY_COLORS as any)[article.category] }]}>
             <Text style={styles.categoryText}>{article.category}</Text>
           </View>
         </View>
@@ -114,7 +114,7 @@ export const ArticleDetailScreen: React.FC<ArticleDetailScreenProps> = () => {
             <View style={styles.tagsContainer}>
               <Text style={styles.tagsTitle}>Tags:</Text>
               <View style={styles.tags}>
-                {article.tags.map((tag, index) => (
+                {article.tags.map((tag: string, index: number) => (
                   <View key={index} style={styles.tag}>
                     <Text style={styles.tagText}>#{tag}</Text>
                   </View>
