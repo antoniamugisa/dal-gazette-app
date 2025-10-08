@@ -23,25 +23,26 @@ interface SettingsItemProps {
   rightComponent?: React.ReactNode;
 }
 
-const SettingsItem: React.FC<SettingsItemProps> = ({
+const SettingsItem: React.FC<SettingsItemProps & { theme: any }> = ({
   title,
   subtitle,
   onPress,
   showArrow = false,
   rightComponent,
+  theme,
 }) => (
   <TouchableOpacity
-    style={styles.settingsItem}
+    style={[styles.settingsItem, { borderBottomColor: theme.colors.border }]}
     onPress={onPress}
     disabled={!onPress}
     activeOpacity={onPress ? 0.7 : 1}
   >
     <View style={styles.settingsItemContent}>
       <View style={styles.settingsItemText}>
-        <Text style={styles.settingsItemTitle}>{title}</Text>
-        {subtitle && <Text style={styles.settingsItemSubtitle}>{subtitle}</Text>}
+        <Text style={[styles.settingsItemTitle, { color: theme.colors.text }]}>{title}</Text>
+        {subtitle && <Text style={[styles.settingsItemSubtitle, { color: theme.colors.textSecondary }]}>{subtitle}</Text>}
       </View>
-      {rightComponent || (showArrow && <ChevronRight size={20} color="#9CA3AF" />)}
+      {rightComponent || (showArrow && <ChevronRight size={20} color={theme.colors.textSecondary} />)}
     </View>
   </TouchableOpacity>
 );
@@ -50,9 +51,9 @@ interface SectionHeaderProps {
   title: string;
 }
 
-const SectionHeader: React.FC<SectionHeaderProps> = ({ title }) => (
+const SectionHeader: React.FC<SectionHeaderProps & { theme: any }> = ({ title, theme }) => (
   <View style={styles.sectionHeader}>
-    <Text style={styles.sectionHeaderText}>{title}</Text>
+    <Text style={[styles.sectionHeaderText, { color: theme.colors.textSecondary }]}>{title}</Text>
   </View>
 );
 
@@ -160,34 +161,34 @@ export const SettingsScreen: React.FC = () => {
 
 
   return (
-    <View style={styles.container}>
-      <SafeAreaView style={styles.safeArea} edges={['top']}>
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.colors.background }]} edges={['top']}>
         {/* Header */}
-        <View style={styles.header}>
+        <View style={[styles.header, { borderBottomColor: theme.colors.border }]}>
           <TouchableOpacity onPress={handleBackPress} style={styles.backButton}>
-            <ArrowLeft size={24} color="#000000" />
+            <ArrowLeft size={24} color={theme.colors.text} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>My Account</Text>
+          <Text style={[styles.headerTitle, { color: theme.colors.text }]}>My Account</Text>
           <TouchableOpacity style={styles.settingsButton} onPress={handleSettingsIconPress}>
-            <Settings size={24} color="#6B7280" />
+            <Settings size={24} color={theme.colors.textSecondary} />
           </TouchableOpacity>
         </View>
       </SafeAreaView>
 
       <ScrollView ref={scrollViewRef} style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* GET CAUGHT UP Section */}
-        <View style={styles.sectionContainer}>
-          <SectionHeader title="GET CAUGHT UP" />
-          <View style={styles.notificationItem}>
+        <View style={[styles.sectionContainer, { backgroundColor: theme.colors.surface }]}>
+          <SectionHeader title="GET CAUGHT UP" theme={theme} />
+          <View style={[styles.notificationItem, { borderBottomColor: theme.colors.border }]}>
             <View style={styles.notificationContent}>
-              <Text style={styles.notificationTitle}>News</Text>
-              <Text style={styles.notificationSubtitle}>Latest news and updates.</Text>
+              <Text style={[styles.notificationTitle, { color: theme.colors.text }]}>News</Text>
+              <Text style={[styles.notificationSubtitle, { color: theme.colors.textSecondary }]}>Latest news and updates.</Text>
             </View>
             <Switch
               value={notifications.news}
               onValueChange={(value) => setNotifications(prev => ({ ...prev, news: value }))}
-              trackColor={{ false: '#E5E7EB', true: '#007AFF' }}
-              thumbColor="#FFFFFF"
+              trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
+              thumbColor={theme.colors.surface}
             />
           </View>
           <View style={styles.notificationItem}>
@@ -265,79 +266,97 @@ export const SettingsScreen: React.FC = () => {
         </View>
 
         {/* SETTINGS Section */}
-        <View ref={settingsSectionRef} style={styles.sectionContainer}>
-          <SectionHeader title="SETTINGS" />
+        <View ref={settingsSectionRef} style={[styles.sectionContainer, { backgroundColor: theme.colors.surface }]}>
+          <SectionHeader title="SETTINGS" theme={theme} />
         </View>
 
         {/* App Settings Section */}
-        <SectionHeader title="APP SETTINGS" />
-        <SettingsItem
-          title="Privacy Settings"
-          onPress={handlePrivacySettings}
-          showArrow
-        />
-        <SettingsItem
-          title="Display Settings"
-          subtitle={getThemeDisplayName(themeMode)}
-          onPress={handleDisplaySettings}
-          showArrow
-        />
-        <SettingsItem
-          title="Data Usage"
-          onPress={handleDataUsage}
-          showArrow
-        />
-        <SettingsItem
-          title="Autoplay Videos"
-          rightComponent={
-            <Switch
-              value={appSettings.autoplayVideos}
-              onValueChange={(value) => setAppSettings(prev => ({ ...prev, autoplayVideos: value }))}
-              trackColor={{ false: '#E5E7EB', true: '#007AFF' }}
-              thumbColor="#FFFFFF"
-            />
-          }
-        />
+        <View style={[styles.sectionContainer, { backgroundColor: theme.colors.surface }]}>
+          <SectionHeader title="APP SETTINGS" theme={theme} />
+          <SettingsItem
+            title="Privacy Settings"
+            onPress={handlePrivacySettings}
+            showArrow
+            theme={theme}
+          />
+          <SettingsItem
+            title="Display Settings"
+            subtitle={getThemeDisplayName(themeMode)}
+            onPress={handleDisplaySettings}
+            showArrow
+            theme={theme}
+          />
+          <SettingsItem
+            title="Data Usage"
+            onPress={handleDataUsage}
+            showArrow
+            theme={theme}
+          />
+          <SettingsItem
+            title="Autoplay Videos"
+            rightComponent={
+              <Switch
+                value={appSettings.autoplayVideos}
+                onValueChange={(value) => setAppSettings(prev => ({ ...prev, autoplayVideos: value }))}
+                trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
+                thumbColor={theme.colors.surface}
+              />
+            }
+            theme={theme}
+          />
+        </View>
 
         {/* Support Section */}
-        <SectionHeader title="SUPPORT" />
-        <SettingsItem
-          title="Report a Bug"
-          onPress={handleReportBug}
-        />
-        <SettingsItem
-          title="Contact Us"
-          onPress={handleContactUs}
-        />
-        <SettingsItem
-          title="Report a News Error"
-          onPress={handleReportNewsError}
-        />
-        <SettingsItem
-          title="Visit Our Help Center"
-          onPress={handleHelpCenter}
-        />
+        <View style={[styles.sectionContainer, { backgroundColor: theme.colors.surface }]}>
+          <SectionHeader title="SUPPORT" theme={theme} />
+          <SettingsItem
+            title="Report a Bug"
+            onPress={handleReportBug}
+            theme={theme}
+          />
+          <SettingsItem
+            title="Contact Us"
+            onPress={handleContactUs}
+            theme={theme}
+          />
+          <SettingsItem
+            title="Report a News Error"
+            onPress={handleReportNewsError}
+            theme={theme}
+          />
+          <SettingsItem
+            title="Visit Our Help Center"
+            onPress={handleHelpCenter}
+            theme={theme}
+          />
+        </View>
 
         {/* Account Actions */}
-        <SettingsItem
-          title="Log Out"
-          onPress={handleLogOut}
-        />
+        <View style={[styles.sectionContainer, { backgroundColor: theme.colors.surface }]}>
+          <SettingsItem
+            title="Log Out"
+            onPress={handleLogOut}
+            theme={theme}
+          />
+        </View>
 
         {/* About Section */}
-        <SettingsItem
-          title="About This App"
-          onPress={handleAboutApp}
-          showArrow
-        />
+        <View style={[styles.sectionContainer, { backgroundColor: theme.colors.surface }]}>
+          <SettingsItem
+            title="About This App"
+            onPress={handleAboutApp}
+            showArrow
+            theme={theme}
+          />
+        </View>
 
         {/* Footer */}
         <View style={styles.footer}>
-          <Text style={styles.footerText}>The Dalhousie Gazette</Text>
-          <Text style={styles.footerText}>Student Union Building, 3rd floor Room 345</Text>
-          <Text style={styles.footerText}>6136 University Avenue</Text>
-          <Text style={styles.footerText}>Halifax, Nova Scotia</Text>
-          <Text style={styles.footerText}>B3H 4J2</Text>
+          <Text style={[styles.footerText, { color: theme.colors.textSecondary }]}>The Dalhousie Gazette</Text>
+          <Text style={[styles.footerText, { color: theme.colors.textSecondary }]}>Student Union Building, 3rd floor Room 345</Text>
+          <Text style={[styles.footerText, { color: theme.colors.textSecondary }]}>6136 University Avenue</Text>
+          <Text style={[styles.footerText, { color: theme.colors.textSecondary }]}>Halifax, Nova Scotia</Text>
+          <Text style={[styles.footerText, { color: theme.colors.textSecondary }]}>B3H 4J2</Text>
         </View>
       </ScrollView>
 
@@ -407,17 +426,13 @@ export const SettingsScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
   },
   safeArea: {
-    backgroundColor: '#FFFFFF',
   },
   header: {
-    backgroundColor: '#FFFFFF',
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -425,17 +440,14 @@ const styles = StyleSheet.create({
   backButton: {
     padding: 8,
     borderRadius: 20,
-    backgroundColor: '#F3F4F6',
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#000000',
   },
   settingsButton: {
     padding: 8,
     borderRadius: 20,
-    backgroundColor: '#F3F4F6',
   },
   scrollView: {
     flex: 1,
@@ -444,25 +456,21 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   sectionHeader: {
-    backgroundColor: '#F8F9FA',
     paddingHorizontal: 20,
     paddingVertical: 12,
   },
   sectionHeaderText: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#6B7280',
     letterSpacing: 0.5,
   },
   notificationItem: {
-    backgroundColor: '#FFFFFF',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
   },
   notificationContent: {
     flex: 1,
@@ -471,12 +479,10 @@ const styles = StyleSheet.create({
   notificationTitle: {
     fontSize: 16,
     fontWeight: '500',
-    color: '#000000',
     marginBottom: 2,
   },
   notificationSubtitle: {
     fontSize: 14,
-    color: '#6B7280',
   },
   footer: {
     paddingHorizontal: 20,
@@ -485,14 +491,11 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 12,
-    color: '#9CA3AF',
     textAlign: 'center',
     marginBottom: 4,
   },
   settingsItem: {
-    backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
   },
   settingsItemContent: {
     flexDirection: 'row',
@@ -507,11 +510,9 @@ const styles = StyleSheet.create({
   settingsItemTitle: {
     fontSize: 16,
     fontWeight: '500',
-    color: '#000000',
   },
   settingsItemSubtitle: {
     fontSize: 14,
-    color: '#6B7280',
     marginTop: 2,
   },
   modalOverlay: {
@@ -558,7 +559,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalCloseButtonText: {
-    color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '600',
   },

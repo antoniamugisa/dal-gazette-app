@@ -12,6 +12,7 @@ import {
 import { X, Search } from 'lucide-react-native';
 import { ArticleCard } from './ArticleCard';
 import { Article } from '../types';
+import { useAppContext } from '../context/AppContext';
 
 interface SearchModalProps {
   visible: boolean;
@@ -26,6 +27,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
   articles,
   onArticlePress,
 }) => {
+  const { theme } = useAppContext();
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
 
@@ -60,29 +62,29 @@ export const SearchModal: React.FC<SearchModalProps> = ({
       presentationStyle="pageSheet"
       onRequestClose={handleClose}
     >
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
         {/* Header */}
-        <View style={styles.header}>
-          <View style={styles.searchContainer}>
-            <Search size={20} color="#9CA3AF" style={styles.searchIcon} />
+        <View style={[styles.header, { backgroundColor: theme.colors.surface, borderBottomColor: theme.colors.border }]}>
+          <View style={[styles.searchContainer, { backgroundColor: theme.colors.accent }]}>
+            <Search size={20} color={theme.colors.textSecondary} style={styles.searchIcon} />
             <TextInput
-              style={styles.searchInput}
+              style={[styles.searchInput, { color: theme.colors.text }]}
               value={searchQuery}
               onChangeText={setSearchQuery}
               placeholder="Search articles..."
-              placeholderTextColor="#9CA3AF"
+              placeholderTextColor={theme.colors.textSecondary}
               autoFocus
               returnKeyType="search"
             />
           </View>
           <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
-            <X size={24} color="#6B7280" />
+            <X size={24} color={theme.colors.textSecondary} />
           </TouchableOpacity>
         </View>
 
         {/* Results */}
         <View style={styles.resultsContainer}>
-          <Text style={styles.resultsText}>
+          <Text style={[styles.resultsText, { color: theme.colors.textSecondary }]}>
             {searchQuery.trim() 
               ? `${filteredArticles.length} result${filteredArticles.length !== 1 ? 's' : ''} found`
               : 'All articles'
@@ -104,15 +106,12 @@ export const SearchModal: React.FC<SearchModalProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
   },
   header: {
-    backgroundColor: '#FFFFFF',
     paddingHorizontal: 16,
     paddingTop: 20,
     paddingBottom: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -120,7 +119,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F3F4F6',
     borderRadius: 12,
     paddingHorizontal: 12,
     paddingVertical: 8,
@@ -132,7 +130,6 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 16,
-    color: '#000000',
     paddingVertical: 4,
   },
   closeButton: {
@@ -145,7 +142,6 @@ const styles = StyleSheet.create({
   },
   resultsText: {
     fontSize: 14,
-    color: '#6B7280',
     marginBottom: 12,
   },
   listContainer: {

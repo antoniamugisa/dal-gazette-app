@@ -13,7 +13,7 @@ import { Article } from '../types';
 import { useAppContext } from '../context/AppContext';
 
 export const CultureScreen: React.FC = () => {
-  const { scrapedArticles, isLoadingArticles, refreshArticles } = useAppContext();
+  const { scrapedArticles, isLoadingArticles, refreshArticles, theme } = useAppContext();
   const [articles, setArticles] = useState<Article[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -46,7 +46,7 @@ export const CultureScreen: React.FC = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <AppHeader />
       
       <FlatList
@@ -66,7 +66,6 @@ export const CultureScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
   },
   listContainer: {
     paddingVertical: 8,

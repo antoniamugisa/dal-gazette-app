@@ -18,7 +18,7 @@ import { Article } from '../types';
 
 export const YouScreen: React.FC = () => {
   const navigation = useNavigation();
-  const { bookmarkedArticles, scrapedArticles } = useAppContext();
+  const { bookmarkedArticles, scrapedArticles, theme } = useAppContext();
   const [savedArticles, setSavedArticles] = useState<Article[]>([]);
   const [viewedArticles, setViewedArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
@@ -67,11 +67,11 @@ export const YouScreen: React.FC = () => {
   );
 
   const renderPlaylist = (title: string, articles: Article[], icon: React.ReactNode, emptyMessage: string) => (
-    <View style={styles.playlistContainer}>
+    <View style={[styles.playlistContainer, { backgroundColor: theme.colors.surface }]}>
       <View style={styles.playlistHeader}>
         {icon}
-        <Text style={styles.playlistTitle}>{title}</Text>
-        <Text style={styles.playlistCount}>({articles.length})</Text>
+        <Text style={[styles.playlistTitle, { color: theme.colors.text }]}>{title}</Text>
+        <Text style={[styles.playlistCount, { color: theme.colors.textSecondary }]}>({articles.length})</Text>
       </View>
       
       {articles.length > 0 ? (
@@ -84,7 +84,7 @@ export const YouScreen: React.FC = () => {
         />
       ) : (
         <View style={styles.emptyPlaylist}>
-          <Text style={styles.emptyPlaylistText}>{emptyMessage}</Text>
+          <Text style={[styles.emptyPlaylistText, { color: theme.colors.textSecondary }]}>{emptyMessage}</Text>
         </View>
       )}
     </View>
@@ -95,13 +95,13 @@ export const YouScreen: React.FC = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       {/* Profile Header */}
-      <SafeAreaView style={styles.safeArea} edges={['top']}>
-        <View style={styles.profileHeader}>
-          <Text style={styles.userName}>{userName}</Text>
-          <TouchableOpacity onPress={handleSettingsPress} style={styles.settingsButton}>
-            <Settings size={24} color="#6B7280" />
+      <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.colors.surface }]} edges={['top']}>
+        <View style={[styles.profileHeader, { backgroundColor: theme.colors.surface, borderBottomColor: theme.colors.border }]}>
+          <Text style={[styles.userName, { color: theme.colors.text }]}>{userName}</Text>
+          <TouchableOpacity onPress={handleSettingsPress} style={[styles.settingsButton, { backgroundColor: theme.colors.accent }]}>
+            <Settings size={24} color={theme.colors.textSecondary} />
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -117,7 +117,7 @@ export const YouScreen: React.FC = () => {
         {renderPlaylist(
           "Saved Articles",
           savedArticles,
-          <Bookmark size={20} color="#FFD400" />,
+          <Bookmark size={20} color={theme.colors.primary} />,
           "No saved articles yet. Bookmark articles to see them here."
         )}
 
@@ -125,7 +125,7 @@ export const YouScreen: React.FC = () => {
         {renderPlaylist(
           "Recently Viewed",
           viewedArticles,
-          <Eye size={20} color="#6B7280" />,
+          <Eye size={20} color={theme.colors.textSecondary} />,
           "No recently viewed articles."
         )}
       </ScrollView>
@@ -136,17 +136,13 @@ export const YouScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
   },
   safeArea: {
-    backgroundColor: '#FFFFFF',
   },
   profileHeader: {
-    backgroundColor: '#FFFFFF',
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -154,18 +150,15 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#000000',
   },
   settingsButton: {
     padding: 8,
     borderRadius: 20,
-    backgroundColor: '#F3F4F6',
   },
   scrollView: {
     flex: 1,
   },
   playlistContainer: {
-    backgroundColor: '#FFFFFF',
     marginTop: 8,
     paddingVertical: 16,
   },
@@ -178,13 +171,11 @@ const styles = StyleSheet.create({
   playlistTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#000000',
     marginLeft: 8,
     flex: 1,
   },
   playlistCount: {
     fontSize: 14,
-    color: '#6B7280',
     fontWeight: '500',
   },
   emptyPlaylist: {
@@ -194,7 +185,6 @@ const styles = StyleSheet.create({
   },
   emptyPlaylistText: {
     fontSize: 14,
-    color: '#6B7280',
     textAlign: 'center',
     lineHeight: 20,
   },

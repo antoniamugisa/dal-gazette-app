@@ -23,7 +23,7 @@ interface ArticleDetailScreenProps {
 export const ArticleDetailScreen: React.FC<ArticleDetailScreenProps> = () => {
   const route = useRoute();
   const navigation = useNavigation();
-  const { selectedArticle, setSelectedArticle } = useAppContext();
+  const { selectedArticle, setSelectedArticle, theme } = useAppContext();
   
   const article = selectedArticle || (route.params as any)?.article;
   
@@ -89,18 +89,18 @@ export const ArticleDetailScreen: React.FC<ArticleDetailScreenProps> = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { borderBottomColor: theme.colors.border }]}>
         <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-          <ArrowLeft size={24} color="#000000" />
+          <ArrowLeft size={24} color={theme.colors.text} />
         </TouchableOpacity>
         <View style={styles.headerActions}>
           <TouchableOpacity onPress={handleBookmark} style={styles.actionButton}>
-            <Bookmark size={24} color="#000000" />
+            <Bookmark size={24} color={theme.colors.text} />
           </TouchableOpacity>
           <TouchableOpacity onPress={handleShare} style={styles.actionButton}>
-            <Share2 size={24} color="#000000" />
+            <Share2 size={24} color={theme.colors.text} />
           </TouchableOpacity>
         </View>
       </View>
@@ -115,9 +115,9 @@ export const ArticleDetailScreen: React.FC<ArticleDetailScreenProps> = () => {
               onError={(error) => console.log('Image load error:', error)}
             />
           ) : (
-            <View style={[styles.heroImage, { backgroundColor: '#F3F4F6', justifyContent: 'center', alignItems: 'center' }]}>
-              <Text style={{ color: '#6B7280', fontSize: 18, fontWeight: '600' }}>📰</Text>
-              <Text style={{ color: '#6B7280', fontSize: 14, marginTop: 8 }}>Dal Gazette</Text>
+            <View style={[styles.heroImage, { backgroundColor: theme.colors.accent, justifyContent: 'center', alignItems: 'center' }]}>
+              <Text style={{ color: theme.colors.textSecondary, fontSize: 18, fontWeight: '600' }}>📰</Text>
+              <Text style={{ color: theme.colors.textSecondary, fontSize: 14, marginTop: 8 }}>Dal Gazette</Text>
             </View>
           )}
           <View style={[styles.categoryTag, { backgroundColor: (CATEGORY_COLORS as any)[article.category] }]}>
@@ -127,31 +127,31 @@ export const ArticleDetailScreen: React.FC<ArticleDetailScreenProps> = () => {
 
         {/* Article Content */}
         <View style={styles.content}>
-          <Text style={styles.title}>{article.title}</Text>
+          <Text style={[styles.title, { color: theme.colors.text }]}>{article.title}</Text>
           
           {/* Article Meta */}
           <View style={styles.meta}>
             <View style={styles.metaItem}>
-              <User size={16} color="#6B7280" />
-              <Text style={styles.metaText}>{article.author}</Text>
+              <User size={16} color={theme.colors.textSecondary} />
+              <Text style={[styles.metaText, { color: theme.colors.textSecondary }]}>{article.author}</Text>
             </View>
             <View style={styles.metaItem}>
-              <Clock size={16} color="#6B7280" />
-              <Text style={styles.metaText}>{getTimeAgo(article.publishedAt)}</Text>
+              <Clock size={16} color={theme.colors.textSecondary} />
+              <Text style={[styles.metaText, { color: theme.colors.textSecondary }]}>{getTimeAgo(article.publishedAt)}</Text>
             </View>
           </View>
 
           {/* Article Body */}
-          <Text style={styles.body}>{article.content}</Text>
+          <Text style={[styles.body, { color: theme.colors.text }]}>{article.content}</Text>
 
           {/* Tags */}
           {article.tags.length > 0 && (
             <View style={styles.tagsContainer}>
-              <Text style={styles.tagsTitle}>Tags:</Text>
+              <Text style={[styles.tagsTitle, { color: theme.colors.textSecondary }]}>Tags:</Text>
               <View style={styles.tags}>
                 {article.tags.map((tag: string, index: number) => (
-                  <View key={index} style={styles.tag}>
-                    <Text style={styles.tagText}>#{tag}</Text>
+                  <View key={index} style={[styles.tag, { backgroundColor: theme.colors.accent }]}>
+                    <Text style={[styles.tagText, { color: theme.colors.textSecondary }]}>#{tag}</Text>
                   </View>
                 ))}
               </View>
@@ -166,7 +166,6 @@ export const ArticleDetailScreen: React.FC<ArticleDetailScreenProps> = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
   },
   header: {
     flexDirection: 'row',
@@ -176,7 +175,6 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
   },
   backButton: {
     padding: 8,
@@ -219,7 +217,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: '800',
-    color: '#000000',
     lineHeight: 32,
     marginBottom: 16,
   },
@@ -235,12 +232,10 @@ const styles = StyleSheet.create({
   metaText: {
     marginLeft: 6,
     fontSize: 14,
-    color: '#6B7280',
   },
   body: {
     fontSize: 16,
     lineHeight: 24,
-    color: '#000000',
     marginBottom: 24,
   },
   tagsContainer: {
@@ -249,7 +244,6 @@ const styles = StyleSheet.create({
   tagsTitle: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#6B7280',
     marginBottom: 8,
   },
   tags: {
@@ -257,7 +251,6 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   tag: {
-    backgroundColor: '#F3F4F6',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 16,
@@ -266,6 +259,5 @@ const styles = StyleSheet.create({
   },
   tagText: {
     fontSize: 12,
-    color: '#6B7280',
   },
 });
