@@ -56,9 +56,27 @@ export const HomeScreen: React.FC = () => {
   };
 
   const handleArticlePress = async (article: Article) => {
+    console.log('HomeScreen - Article pressed:', {
+      id: article.id,
+      title: article.title,
+      author: article.author,
+      imageUrl: article.imageUrl
+    });
+    
     // Load full article content if not already loaded
     await loadArticleContent(article);
-    setSelectedArticle(article);
+    
+    // Get the updated article from scrapedArticles to ensure we have the latest content
+    const updatedArticle = scrapedArticles.find(a => a.id === article.id) || article;
+    
+    console.log('HomeScreen - Updated article:', {
+      id: updatedArticle.id,
+      title: updatedArticle.title,
+      author: updatedArticle.author,
+      imageUrl: updatedArticle.imageUrl
+    });
+    
+    setSelectedArticle(updatedArticle);
     navigation.navigate('ArticleDetail' as never);
   };
 

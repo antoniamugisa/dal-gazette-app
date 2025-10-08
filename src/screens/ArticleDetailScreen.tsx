@@ -27,9 +27,22 @@ export const ArticleDetailScreen: React.FC<ArticleDetailScreenProps> = () => {
   
   const article = selectedArticle || (route.params as any)?.article;
   
+  // Debug logging
+  console.log('ArticleDetailScreen - Article data:', {
+    id: article?.id,
+    title: article?.title,
+    author: article?.author,
+    imageUrl: article?.imageUrl,
+    content: article?.content?.substring(0, 100) + '...'
+  });
+  
   const handleBack = () => {
     setSelectedArticle(null);
-    navigation.goBack();
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    } else {
+      navigation.navigate('MainTabs' as never);
+    }
   };
 
   // Safety check - if no article, go back
@@ -84,7 +97,18 @@ export const ArticleDetailScreen: React.FC<ArticleDetailScreenProps> = () => {
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Hero Image */}
         <View style={styles.imageContainer}>
-          <Image source={{ uri: article.imageUrl }} style={styles.heroImage} />
+          {article.imageUrl ? (
+            <Image 
+              source={{ uri: article.imageUrl }} 
+              style={styles.heroImage}
+              onError={(error) => console.log('Image load error:', error)}
+            />
+          ) : (
+            <View style={[styles.heroImage, { backgroundColor: '#F3F4F6', justifyContent: 'center', alignItems: 'center' }]}>
+              <Text style={{ color: '#6B7280', fontSize: 18, fontWeight: '600' }}>📰</Text>
+              <Text style={{ color: '#6B7280', fontSize: 14, marginTop: 8 }}>Dal Gazette</Text>
+            </View>
+          )}
           <View style={[styles.categoryTag, { backgroundColor: (CATEGORY_COLORS as any)[article.category] }]}>
             <Text style={styles.categoryText}>{article.category}</Text>
           </View>

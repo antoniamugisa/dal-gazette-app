@@ -124,7 +124,7 @@ const getRealisticMockArticles = (): Article[] => {
       category: 'News',
       author: 'Sarah Johnson',
       publishedAt: new Date(Date.now() - 1 * 60 * 60 * 1000), // 1 hour ago
-      imageUrl: 'https://via.placeholder.com/400x250/3B82F6/FFFFFF?text=Power+Hour',
+      imageUrl: undefined,
       tags: ['student life', 'campus', 'engagement'],
       url: 'https://dalgazette.com/power-hour-engagement'
     },
@@ -136,7 +136,7 @@ const getRealisticMockArticles = (): Article[] => {
       category: 'News',
       author: 'Michael Chen',
       publishedAt: new Date(Date.now() - 3 * 60 * 60 * 1000), // 3 hours ago
-      imageUrl: 'https://via.placeholder.com/400x250/EF4444/FFFFFF?text=Petition',
+      imageUrl: undefined,
       tags: ['administration', 'governance', 'student voice'],
       url: 'https://dalgazette.com/president-petition'
     },
@@ -148,7 +148,7 @@ const getRealisticMockArticles = (): Article[] => {
       category: 'News',
       author: 'Emma Rodriguez',
       publishedAt: new Date(Date.now() - 6 * 60 * 60 * 1000), // 6 hours ago
-      imageUrl: 'https://via.placeholder.com/400x250/10B981/FFFFFF?text=Innovation',
+      imageUrl: undefined,
       tags: ['entrepreneurship', 'innovation', 'technology'],
       url: 'https://dalgazette.com/dal-innovates-showcase'
     },
@@ -160,7 +160,7 @@ const getRealisticMockArticles = (): Article[] => {
       category: 'Sports',
       author: 'Jake Thompson',
       publishedAt: new Date(Date.now() - 8 * 60 * 60 * 1000), // 8 hours ago
-      imageUrl: 'https://via.placeholder.com/400x250/F97316/FFFFFF?text=Tigers+Hockey',
+      imageUrl: undefined,
       tags: ['hockey', 'tigers', 'playoffs', 'athletics'],
       url: 'https://dalgazette.com/tigers-hockey-playoffs'
     },
@@ -172,7 +172,7 @@ const getRealisticMockArticles = (): Article[] => {
       category: 'Arts & Culture',
       author: 'Lisa Park',
       publishedAt: new Date(Date.now() - 12 * 60 * 60 * 1000), // 12 hours ago
-      imageUrl: 'https://via.placeholder.com/400x250/A855F7/FFFFFF?text=Arts+Culture',
+      imageUrl: undefined,
       tags: ['arts', 'culture', 'student life', 'programming'],
       url: 'https://dalgazette.com/arts-culture-initiative'
     },
@@ -184,7 +184,7 @@ const getRealisticMockArticles = (): Article[] => {
       category: 'Opinions',
       author: 'Alex Green',
       publishedAt: new Date(Date.now() - 18 * 60 * 60 * 1000), // 18 hours ago
-      imageUrl: 'https://via.placeholder.com/400x250/059669/FFFFFF?text=Sustainability',
+      imageUrl: undefined,
       tags: ['sustainability', 'environment', 'opinion', 'student voice'],
       url: 'https://dalgazette.com/sustainability-opinion'
     },
@@ -196,7 +196,7 @@ const getRealisticMockArticles = (): Article[] => {
       category: 'News',
       author: 'Dr. Maria Santos',
       publishedAt: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
-      imageUrl: 'https://via.placeholder.com/400x250/0EA5E9/FFFFFF?text=Marine+Research',
+      imageUrl: undefined,
       tags: ['research', 'marine biology', 'conservation', 'climate change'],
       url: 'https://dalgazette.com/marine-biology-research'
     },
@@ -208,7 +208,7 @@ const getRealisticMockArticles = (): Article[] => {
       category: 'News',
       author: 'Food & Lifestyle Team',
       publishedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
-      imageUrl: 'https://via.placeholder.com/400x250/F59E0B/FFFFFF?text=Food+Guide',
+      imageUrl: undefined,
       tags: ['food', 'halifax', 'student life', 'dining'],
       url: 'https://dalgazette.com/halifax-food-guide'
     }
@@ -241,7 +241,7 @@ const getFallbackArticles = (): Article[] => {
       category: 'News',
       author: 'Dal Gazette Staff',
       publishedAt: new Date(),
-      imageUrl: 'https://via.placeholder.com/400x250/3B82F6/FFFFFF?text=Dal+Gazette',
+      imageUrl: undefined,
       tags: ['dalhousie', 'university', 'news'],
       url: 'https://dalgazette.com'
     },
@@ -253,7 +253,7 @@ const getFallbackArticles = (): Article[] => {
       category: 'News',
       author: 'Dal Gazette Staff',
       publishedAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
-      imageUrl: 'https://via.placeholder.com/400x250/10B981/FFFFFF?text=Campus+Life',
+      imageUrl: undefined,
       tags: ['campus', 'student', 'activities'],
       url: 'https://dalgazette.com'
     },
@@ -265,7 +265,7 @@ const getFallbackArticles = (): Article[] => {
       category: 'Sports',
       author: 'Dal Gazette Staff',
       publishedAt: new Date(Date.now() - 4 * 60 * 60 * 1000),
-      imageUrl: 'https://via.placeholder.com/400x250/F97316/FFFFFF?text=Sports',
+      imageUrl: undefined,
       tags: ['sports', 'tigers', 'athletics'],
       url: 'https://dalgazette.com'
     }
