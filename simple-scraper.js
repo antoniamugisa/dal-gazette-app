@@ -130,8 +130,8 @@ app.post('/api/article-content', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 Simple Dal Gazette Scraper API running on http://localhost:${PORT}`);
-  console.log(`📱 Your React Native app should connect to: http://localhost:${PORT}/api/articles`);
-  console.log(`🌐 Test the API: http://localhost:${PORT}/api/articles`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Simple Dal Gazette Scraper API running on http://192.168.100.56:${PORT}`);
+  console.log(`📱 Your React Native app should connect to: http://192.168.100.56:${PORT}/api/articles`);
+  console.log(`🌐 Test the API: http://192.168.100.56:${PORT}/api/articles`);
 });

@@ -1,7 +1,7 @@
 import { Article } from '../types';
 
 // Real web scraping using backend API
-const API_BASE_URL = 'http://localhost:3001/api';
+const API_BASE_URL = 'http://192.168.100.56:3001/api';
 
 export const scrapeDalGazette = async (): Promise<Article[]> => {
   try {
@@ -19,7 +19,7 @@ export const scrapeDalGazette = async (): Promise<Article[]> => {
     }
   } catch (error) {
     console.error('❌ Error fetching real articles:', error);
-    console.log('📱 Make sure the backend scraper is running on http://localhost:3001');
+    console.log('📱 Make sure the backend scraper is running on http://192.168.100.56:3001');
     return getFallbackArticles();
   }
 };
