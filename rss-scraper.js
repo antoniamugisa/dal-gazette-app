@@ -29,6 +29,99 @@ function makeRequest(url) {
   });
 }
 
+// Structure article content with proper paragraphs and formatting
+function structureArticleContent(content) {
+  if (!content) return '';
+  
+  // First, clean up HTML entities
+  let structured = content
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#038;/g, '&')
+    .replace(/&#8217;/g, "'")
+    .replace(/&#8216;/g, "'")
+    .replace(/&#8220;/g, '"')
+    .replace(/&#8221;/g, '"')
+    .replace(/&#8211;/g, '–')
+    .replace(/&#8212;/g, '—');
+  
+  // Convert paragraph tags to proper paragraphs
+  structured = structured.replace(/<p>/g, '<p>');
+  structured = structured.replace(/<\/p>/g, '</p>');
+  
+  // Convert line breaks to paragraphs if there are no existing paragraph tags
+  if (!structured.includes('<p>')) {
+    // Split on double line breaks or periods followed by space and capital letter
+    structured = structured
+      .split(/\n\s*\n/)
+      .map(paragraph => paragraph.trim())
+      .filter(paragraph => paragraph.length > 0)
+      .map(paragraph => `<p>${paragraph}</p>`)
+      .join('\n\n');
+  }
+  
+  // Clean up any remaining HTML tags we don't want
+  structured = structured
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '') // Remove scripts
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '') // Remove styles
+    .replace(/<div[^>]*>/g, '') // Remove div opening tags
+    .replace(/<\/div>/g, '') // Remove div closing tags
+    .replace(/<span[^>]*>/g, '') // Remove span opening tags
+    .replace(/<\/span>/g, '') // Remove span closing tags
+    .replace(/<br\s*\/?>/gi, '\n') // Convert br tags to line breaks
+    .replace(/<strong>/g, '<b>') // Convert strong to b
+    .replace(/<\/strong>/g, '</b>') // Convert strong to b
+    .replace(/<em>/g, '<i>') // Convert em to i
+    .replace(/<\/em>/g, '</i>') // Convert em to i
+    .replace(/<a[^>]*href="([^"]*)"[^>]*>([^<]*)<\/a>/gi, '$2') // Remove links but keep text
+    .replace(/<img[^>]*>/gi, '') // Remove images
+    .replace(/<blockquote[^>]*>/g, '<blockquote>') // Clean blockquote tags
+    .replace(/<\/blockquote>/g, '</blockquote>')
+    .replace(/<ul[^>]*>/g, '<ul>') // Clean list tags
+    .replace(/<\/ul>/g, '</ul>')
+    .replace(/<ol[^>]*>/g, '<ol>') // Clean ordered list tags
+    .replace(/<\/ol>/g, '</ol>')
+    .replace(/<li[^>]*>/g, '<li>') // Clean list item tags
+    .replace(/<\/li>/g, '</li>');
+  
+  // Clean up extra whitespace
+  structured = structured
+    .replace(/\n\s*\n\s*\n/g, '\n\n') // Remove multiple consecutive line breaks
+    .replace(/[ \t]+/g, ' ') // Replace multiple spaces/tabs with single space
+    .trim();
+  
+  // If we still don't have proper paragraph structure, create it
+  if (!structured.includes('<p>')) {
+    const sentences = structured.split(/(?<=[.!?])\s+/);
+    const paragraphs = [];
+    let currentParagraph = '';
+    
+    for (let i = 0; i < sentences.length; i++) {
+      const sentence = sentences[i].trim();
+      if (sentence.length === 0) continue;
+      
+      currentParagraph += (currentParagraph ? ' ' : '') + sentence;
+      
+      // Create a new paragraph every 3-4 sentences or if we hit a natural break
+      if ((i + 1) % 3 === 0 || sentence.includes('"') || sentence.includes('.')) {
+        paragraphs.push(`<p>${currentParagraph}</p>`);
+        currentParagraph = '';
+      }
+    }
+    
+    // Add any remaining content as a paragraph
+    if (currentParagraph.trim()) {
+      paragraphs.push(`<p>${currentParagraph}</p>`);
+    }
+    
+    structured = paragraphs.join('\n\n');
+  }
+  
+  return structured;
+}
+
 // Parse RSS XML to extract articles
 function parseRSSFeed(xml) {
   const articles = [];
@@ -72,21 +165,23 @@ function parseRSSFeed(xml) {
     const categories = categoryMatches ? categoryMatches.map(m => m.match(/<!\[CDATA\[(.*?)\]\]>/)[1]) : ['News'];
     
     if (title && title.length > 10) {
-      // Clean up the content (remove HTML tags and extra whitespace)
-      const cleanContent = content
-        .replace(/<[^>]*>/g, '') // Remove HTML tags
-        .replace(/&amp;/g, '&') // Decode HTML entities
+      // Structure the content with proper paragraphs and formatting
+      const structuredContent = structureArticleContent(content);
+      
+      // Create excerpt (first 200 characters of clean text)
+      const cleanExcerpt = structuredContent
+        .replace(/<[^>]*>/g, '') // Remove HTML tags for excerpt
+        .replace(/&amp;/g, '&')
         .replace(/&lt;/g, '<')
         .replace(/&gt;/g, '>')
         .replace(/&quot;/g, '"')
         .replace(/&#038;/g, '&')
-        .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+        .replace(/\s+/g, ' ')
         .trim();
       
-      // Create excerpt (first 200 characters)
-      const excerpt = cleanContent.length > 200 
-        ? cleanContent.substring(0, 200) + '...'
-        : cleanContent;
+      const excerpt = cleanExcerpt.length > 200 
+        ? cleanExcerpt.substring(0, 200) + '...'
+        : cleanExcerpt;
       
       // Parse date
       let publishedDate;
@@ -117,7 +212,7 @@ function parseRSSFeed(xml) {
         id: `rss-${articleCount + 1}`,
         title: title,
         excerpt: excerpt,
-        content: cleanContent,
+        content: structuredContent,
         category: articleCategory,
         author: author,
         publishedAt: publishedDate,
