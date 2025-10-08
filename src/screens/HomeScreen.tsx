@@ -148,7 +148,7 @@ export const HomeScreen: React.FC = () => {
       <SearchModal
         visible={searchModalVisible}
         onClose={() => setSearchModalVisible(false)}
-        articles={articles}
+        articles={scrapedArticles}
         onArticlePress={handleArticlePress}
       />
     </View>

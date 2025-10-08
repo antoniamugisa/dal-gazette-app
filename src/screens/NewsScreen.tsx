@@ -9,31 +9,26 @@ import {
 import { ArticleCard } from '../components/ArticleCard';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { AppHeader } from '../components/AppHeader';
-import { MOCK_ARTICLES } from '../constants/mockData';
 import { Article } from '../types';
+import { useAppContext } from '../context/AppContext';
 
 export const NewsScreen: React.FC = () => {
+  const { scrapedArticles, isLoadingArticles, refreshArticles } = useAppContext();
   const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    loadArticles();
-  }, []);
+    filterArticles();
+  }, [scrapedArticles]);
 
-  const loadArticles = async () => {
-    setLoading(true);
-    // Filter for News category
-    const newsArticles = MOCK_ARTICLES.filter(article => article.category === 'News');
-    setTimeout(() => {
-      setArticles(newsArticles);
-      setLoading(false);
-    }, 1000);
+  const filterArticles = () => {
+    const newsArticles = scrapedArticles.filter(article => article.category === 'News');
+    setArticles(newsArticles);
   };
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await loadArticles();
+    await refreshArticles();
     setRefreshing(false);
   };
 
@@ -46,7 +41,7 @@ export const NewsScreen: React.FC = () => {
     <ArticleCard article={item} onPress={handleArticlePress} />
   );
 
-  if (loading) {
+  if (isLoadingArticles) {
     return <LoadingSpinner message="Loading news articles..." />;
   }
 

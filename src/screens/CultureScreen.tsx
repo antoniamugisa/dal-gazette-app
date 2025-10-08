@@ -9,31 +9,26 @@ import {
 import { ArticleCard } from '../components/ArticleCard';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { AppHeader } from '../components/AppHeader';
-import { MOCK_ARTICLES } from '../constants/mockData';
 import { Article } from '../types';
+import { useAppContext } from '../context/AppContext';
 
 export const CultureScreen: React.FC = () => {
+  const { scrapedArticles, isLoadingArticles, refreshArticles } = useAppContext();
   const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    loadArticles();
-  }, []);
+    filterArticles();
+  }, [scrapedArticles]);
 
-  const loadArticles = async () => {
-    setLoading(true);
-    // Filter for Arts & Culture category
-    const cultureArticles = MOCK_ARTICLES.filter(article => article.category === 'Arts & Culture');
-    setTimeout(() => {
-      setArticles(cultureArticles);
-      setLoading(false);
-    }, 1000);
+  const filterArticles = () => {
+    const cultureArticles = scrapedArticles.filter(article => article.category === 'Arts & Culture');
+    setArticles(cultureArticles);
   };
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await loadArticles();
+    await refreshArticles();
     setRefreshing(false);
   };
 
@@ -46,7 +41,7 @@ export const CultureScreen: React.FC = () => {
     <ArticleCard article={item} onPress={handleArticlePress} />
   );
 
-  if (loading) {
+  if (isLoadingArticles) {
     return <LoadingSpinner message="Loading culture articles..." />;
   }
 

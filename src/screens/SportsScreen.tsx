@@ -9,31 +9,26 @@ import {
 import { ArticleCard } from '../components/ArticleCard';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { AppHeader } from '../components/AppHeader';
-import { MOCK_ARTICLES } from '../constants/mockData';
 import { Article } from '../types';
+import { useAppContext } from '../context/AppContext';
 
 export const SportsScreen: React.FC = () => {
+  const { scrapedArticles, isLoadingArticles, refreshArticles } = useAppContext();
   const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    loadArticles();
-  }, []);
+    filterArticles();
+  }, [scrapedArticles]);
 
-  const loadArticles = async () => {
-    setLoading(true);
-    // Filter for Sports category
-    const sportsArticles = MOCK_ARTICLES.filter(article => article.category === 'Sports');
-    setTimeout(() => {
-      setArticles(sportsArticles);
-      setLoading(false);
-    }, 1000);
+  const filterArticles = () => {
+    const sportsArticles = scrapedArticles.filter(article => article.category === 'Sports');
+    setArticles(sportsArticles);
   };
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await loadArticles();
+    await refreshArticles();
     setRefreshing(false);
   };
 
@@ -46,7 +41,7 @@ export const SportsScreen: React.FC = () => {
     <ArticleCard article={item} onPress={handleArticlePress} />
   );
 
-  if (loading) {
+  if (isLoadingArticles) {
     return <LoadingSpinner message="Loading sports articles..." />;
   }
 
