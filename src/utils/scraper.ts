@@ -12,7 +12,12 @@ export const scrapeDalGazette = async (): Promise<Article[]> => {
     
     if (data.success && data.articles) {
       console.log(`✅ Successfully fetched ${data.articles.length} real articles`);
-      return data.articles;
+      // Convert date strings to Date objects
+      const articlesWithDates = data.articles.map(article => ({
+        ...article,
+        publishedAt: new Date(article.publishedAt)
+      }));
+      return articlesWithDates;
     } else {
       console.log('⚠️ API returned no articles, using fallback');
       return getFallbackArticles();

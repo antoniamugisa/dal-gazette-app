@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -45,9 +45,15 @@ export const ArticleDetailScreen: React.FC<ArticleDetailScreenProps> = () => {
     }
   };
 
-  // Safety check - if no article, go back
+  // Safety check - if no article, go back using useEffect
+  useEffect(() => {
+    if (!article) {
+      handleBack();
+    }
+  }, [article]);
+
+  // Early return if no article
   if (!article) {
-    handleBack();
     return null;
   }
   const handleShare = async () => {
@@ -67,6 +73,11 @@ export const ArticleDetailScreen: React.FC<ArticleDetailScreenProps> = () => {
   };
 
   const getTimeAgo = (date: Date): string => {
+    // Safety check for invalid dates
+    if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
+      return 'Recently';
+    }
+    
     const now = new Date();
     const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
     

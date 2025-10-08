@@ -1,0 +1,184 @@
+// RSS Feed scraper for Dal Gazette
+// Run this with: node rss-scraper.js
+
+const express = require('express');
+const https = require('https');
+const cors = require('cors');
+
+const app = express();
+const PORT = 3001;
+
+// Enable CORS for your React Native app
+app.use(cors());
+app.use(express.json());
+
+// Simple function to make HTTPS requests
+function makeRequest(url) {
+  return new Promise((resolve, reject) => {
+    https.get(url, (response) => {
+      let data = '';
+      response.on('data', (chunk) => {
+        data += chunk;
+      });
+      response.on('end', () => {
+        resolve(data);
+      });
+    }).on('error', (error) => {
+      reject(error);
+    });
+  });
+}
+
+// Parse RSS XML to extract articles
+function parseRSSFeed(xml) {
+  const articles = [];
+  
+  // Extract items from RSS feed
+  const itemRegex = /<item>([\s\S]*?)<\/item>/g;
+  let match;
+  let articleCount = 0;
+  
+  while ((match = itemRegex.exec(xml)) !== null && articleCount < 10) {
+    const itemContent = match[1];
+    
+    // Extract title (handle both CDATA and plain text)
+    let titleMatch = itemContent.match(/<title><!\[CDATA\[(.*?)\]\]><\/title>/);
+    if (!titleMatch) {
+      titleMatch = itemContent.match(/<title>(.*?)<\/title>/);
+    }
+    const title = titleMatch ? titleMatch[1].trim() : '';
+    
+    // Extract link
+    const linkMatch = itemContent.match(/<link>(.*?)<\/link>/);
+    const link = linkMatch ? linkMatch[1].trim() : '';
+    
+    // Extract content (prefer content:encoded over description)
+    let contentMatch = itemContent.match(/<content:encoded><!\[CDATA\[([\s\S]*?)\]\]><\/content:encoded>/);
+    if (!contentMatch) {
+      contentMatch = itemContent.match(/<description><!\[CDATA\[([\s\S]*?)\]\]><\/description>/);
+    }
+    const content = contentMatch ? contentMatch[1].trim() : '';
+    
+    // Extract publication date
+    const pubDateMatch = itemContent.match(/<pubDate>(.*?)<\/pubDate>/);
+    const pubDate = pubDateMatch ? pubDateMatch[1].trim() : '';
+    
+    // Extract author
+    const authorMatch = itemContent.match(/<dc:creator><!\[CDATA\[(.*?)\]\]><\/dc:creator>/);
+    const author = authorMatch ? authorMatch[1].trim() : 'Dal Gazette Staff';
+    
+    // Extract categories
+    const categoryMatches = itemContent.match(/<category><!\[CDATA\[(.*?)\]\]><\/category>/g);
+    const categories = categoryMatches ? categoryMatches.map(m => m.match(/<!\[CDATA\[(.*?)\]\]>/)[1]) : ['News'];
+    
+    if (title && title.length > 10) {
+      // Clean up the content (remove HTML tags and extra whitespace)
+      const cleanContent = content
+        .replace(/<[^>]*>/g, '') // Remove HTML tags
+        .replace(/&amp;/g, '&') // Decode HTML entities
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/&#038;/g, '&')
+        .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+        .trim();
+      
+      // Create excerpt (first 200 characters)
+      const excerpt = cleanContent.length > 200 
+        ? cleanContent.substring(0, 200) + '...'
+        : cleanContent;
+      
+      // Parse date
+      let publishedDate;
+      try {
+        publishedDate = new Date(pubDate);
+        if (isNaN(publishedDate.getTime())) {
+          publishedDate = new Date();
+        }
+      } catch (error) {
+        publishedDate = new Date();
+      }
+      
+      // Determine category based on categories and title
+      let articleCategory = 'News';
+      const allCategories = categories.join(' ').toLowerCase();
+      const titleLower = title.toLowerCase();
+      
+      if (allCategories.includes('opinion') || titleLower.includes('opinion')) {
+        articleCategory = 'Opinions';
+      } else if (allCategories.includes('sport') || titleLower.includes('sport')) {
+        articleCategory = 'Sports';
+      } else if (allCategories.includes('art') || allCategories.includes('culture') || 
+                 titleLower.includes('art') || titleLower.includes('culture')) {
+        articleCategory = 'Arts & Culture';
+      }
+      
+      articles.push({
+        id: `rss-${articleCount + 1}`,
+        title: title,
+        excerpt: excerpt,
+        content: cleanContent,
+        category: articleCategory,
+        author: author,
+        publishedAt: publishedDate,
+        imageUrl: undefined, // RSS doesn't include images
+        tags: categories.map(c => c.toLowerCase()),
+        url: link
+      });
+      
+      articleCount++;
+    }
+  }
+  
+  return articles;
+}
+
+// Scrape the RSS feed for articles
+async function scrapeRSSFeed() {
+  try {
+    console.log('🔍 Scraping Dal Gazette RSS feed...');
+    
+    const xml = await makeRequest('https://dalgazette.com/feed/');
+    const articles = parseRSSFeed(xml);
+    
+    console.log(`✅ Successfully scraped ${articles.length} articles from RSS feed`);
+    return articles;
+
+  } catch (error) {
+    console.error('❌ Error scraping RSS feed:', error.message);
+    return [];
+  }
+}
+
+// API Routes
+app.get('/api/articles', async (req, res) => {
+  try {
+    const articles = await scrapeRSSFeed();
+    res.json({ success: true, articles });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.post('/api/article-content', async (req, res) => {
+  try {
+    const { url } = req.body;
+    if (!url) {
+      return res.status(400).json({ success: false, error: 'URL is required' });
+    }
+    
+    // For RSS articles, we already have the content, but we could fetch the full article if needed
+    const content = `This is the full content for the article at ${url}. The RSS feed provides the article summary, and the full content would be available on the Dal Gazette website.`;
+    
+    res.json({ success: true, content });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Dal Gazette RSS Scraper API running on http://192.168.100.56:${PORT}`);
+  console.log(`📱 Your React Native app should connect to: http://192.168.100.56:${PORT}/api/articles`);
+  console.log(`🌐 Test the API: http://192.168.100.56:${PORT}/api/articles`);
+  console.log(`📰 RSS Feed: https://dalgazette.com/feed/`);
+});

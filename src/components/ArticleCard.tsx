@@ -25,6 +25,11 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
   style,
 }) => {
   const getTimeAgo = (date: Date): string => {
+    // Safety check for invalid dates
+    if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
+      return 'Recently';
+    }
+    
     const now = new Date();
     const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
     
