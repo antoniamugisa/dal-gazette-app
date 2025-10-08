@@ -58,33 +58,16 @@ function structureArticleContent(content) {
       .split(/\n\s*\n/)
       .map(paragraph => paragraph.trim())
       .filter(paragraph => paragraph.length > 0)
-      .map(paragraph => `<p>${paragraph}</p>`)
       .join('\n\n');
   }
   
-  // Clean up any remaining HTML tags we don't want
+  // Remove all HTML tags and convert to plain text
   structured = structured
     .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '') // Remove scripts
     .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '') // Remove styles
-    .replace(/<div[^>]*>/g, '') // Remove div opening tags
-    .replace(/<\/div>/g, '') // Remove div closing tags
-    .replace(/<span[^>]*>/g, '') // Remove span opening tags
-    .replace(/<\/span>/g, '') // Remove span closing tags
-    .replace(/<br\s*\/?>/gi, '\n') // Convert br tags to line breaks
-    .replace(/<strong>/g, '<b>') // Convert strong to b
-    .replace(/<\/strong>/g, '</b>') // Convert strong to b
-    .replace(/<em>/g, '<i>') // Convert em to i
-    .replace(/<\/em>/g, '</i>') // Convert em to i
-    .replace(/<a[^>]*href="([^"]*)"[^>]*>([^<]*)<\/a>/gi, '$2') // Remove links but keep text
-    .replace(/<img[^>]*>/gi, '') // Remove images
-    .replace(/<blockquote[^>]*>/g, '<blockquote>') // Clean blockquote tags
-    .replace(/<\/blockquote>/g, '</blockquote>')
-    .replace(/<ul[^>]*>/g, '<ul>') // Clean list tags
-    .replace(/<\/ul>/g, '</ul>')
-    .replace(/<ol[^>]*>/g, '<ol>') // Clean ordered list tags
-    .replace(/<\/ol>/g, '</ol>')
-    .replace(/<li[^>]*>/g, '<li>') // Clean list item tags
-    .replace(/<\/li>/g, '</li>');
+    .replace(/<[^>]*>/g, '') // Remove all HTML tags
+    .replace(/\n\s*\n/g, '\n\n') // Convert paragraph breaks to double line breaks
+    .replace(/\n{3,}/g, '\n\n'); // Limit to max 2 consecutive line breaks
   
   // Clean up extra whitespace
   structured = structured
@@ -93,7 +76,7 @@ function structureArticleContent(content) {
     .trim();
   
   // If we still don't have proper paragraph structure, create it
-  if (!structured.includes('<p>')) {
+  if (!structured.includes('\n\n')) {
     const sentences = structured.split(/(?<=[.!?])\s+/);
     const paragraphs = [];
     let currentParagraph = '';
@@ -106,14 +89,14 @@ function structureArticleContent(content) {
       
       // Create a new paragraph every 3-4 sentences or if we hit a natural break
       if ((i + 1) % 3 === 0 || sentence.includes('"') || sentence.includes('.')) {
-        paragraphs.push(`<p>${currentParagraph}</p>`);
+        paragraphs.push(currentParagraph);
         currentParagraph = '';
       }
     }
     
     // Add any remaining content as a paragraph
     if (currentParagraph.trim()) {
-      paragraphs.push(`<p>${currentParagraph}</p>`);
+      paragraphs.push(currentParagraph);
     }
     
     structured = paragraphs.join('\n\n');
