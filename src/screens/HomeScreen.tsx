@@ -22,32 +22,25 @@ import { useAppContext } from '../context/AppContext';
 
 export const HomeScreen: React.FC = () => {
   const navigation = useNavigation();
-  const { setSelectedArticle, selectedCategory, setSelectedCategory } = useAppContext();
-  const [articles, setArticles] = useState<Article[]>([]);
+  const { 
+    setSelectedArticle, 
+    selectedCategory, 
+    setSelectedCategory,
+    scrapedArticles,
+    isLoadingArticles,
+    refreshArticles,
+    loadArticleContent
+  } = useAppContext();
   const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [searchModalVisible, setSearchModalVisible] = useState(false);
 
   useEffect(() => {
-    loadArticles();
-  }, []);
-
-  useEffect(() => {
     filterArticles();
-  }, [articles, selectedCategory]);
-
-  const loadArticles = async () => {
-    setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setArticles(MOCK_ARTICLES);
-      setLoading(false);
-    }, 1000);
-  };
+  }, [scrapedArticles, selectedCategory]);
 
   const filterArticles = () => {
-    let filtered = articles;
+    let filtered = scrapedArticles;
 
     if (selectedCategory) {
       filtered = filtered.filter(article => article.category === selectedCategory);
@@ -58,11 +51,13 @@ export const HomeScreen: React.FC = () => {
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await loadArticles();
+    await refreshArticles();
     setRefreshing(false);
   };
 
-  const handleArticlePress = (article: Article) => {
+  const handleArticlePress = async (article: Article) => {
+    // Load full article content if not already loaded
+    await loadArticleContent(article);
     setSelectedArticle(article);
     navigation.navigate('ArticleDetail' as never);
   };
@@ -89,8 +84,8 @@ export const HomeScreen: React.FC = () => {
     />
   );
 
-  if (loading) {
-    return <LoadingSpinner message="Loading latest articles..." />;
+  if (isLoadingArticles) {
+    return <LoadingSpinner message="Loading latest articles from Dal Gazette..." />;
   }
 
   return (
