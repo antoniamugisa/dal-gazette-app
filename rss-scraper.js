@@ -211,6 +211,52 @@ function parseRSSFeed(xml) {
   return articles;
 }
 
+// Extract image from article page
+async function extractArticleImage(articleUrl) {
+  try {
+    // Clean the URL (remove UTM parameters)
+    const cleanUrl = articleUrl.split('?')[0];
+    
+    const html = await makeRequest(cleanUrl);
+    
+    // Look for featured image in various common locations
+    const imagePatterns = [
+      /<meta property="og:image" content="([^"]+)"/i,
+      /<meta name="twitter:image" content="([^"]+)"/i,
+      /<img[^>]*class="[^"]*featured[^"]*"[^>]*src="([^"]+)"/i,
+      /<img[^>]*class="[^"]*wp-post-image[^"]*"[^>]*src="([^"]+)"/i,
+      /<img[^>]*src="([^"]*wp-content\/uploads[^"]*)"[^>]*>/i,
+      /<img[^>]*src="([^"]*\.(jpg|jpeg|png|webp)[^"]*)"[^>]*>/i
+    ];
+    
+    for (const pattern of imagePatterns) {
+      const match = html.match(pattern);
+      if (match && match[1]) {
+        let imageUrl = match[1];
+        
+        // Make sure it's a full URL
+        if (imageUrl.startsWith('//')) {
+          imageUrl = 'https:' + imageUrl;
+        } else if (imageUrl.startsWith('/')) {
+          imageUrl = 'https://dalgazette.com' + imageUrl;
+        }
+        
+        // Validate it's a real image URL
+        if (imageUrl.includes('dalgazette.com') && 
+            (imageUrl.includes('.jpg') || imageUrl.includes('.jpeg') || 
+             imageUrl.includes('.png') || imageUrl.includes('.webp'))) {
+          return imageUrl;
+        }
+      }
+    }
+    
+    return null;
+  } catch (error) {
+    console.log(`⚠️ Could not extract image from ${articleUrl}:`, error.message);
+    return null;
+  }
+}
+
 // Scrape the RSS feed for articles
 async function scrapeRSSFeed() {
   try {
@@ -220,6 +266,22 @@ async function scrapeRSSFeed() {
     const articles = parseRSSFeed(xml);
     
     console.log(`✅ Successfully scraped ${articles.length} articles from RSS feed`);
+    
+    // Extract images for each article
+    console.log('🖼️ Extracting images from article pages...');
+    for (let i = 0; i < articles.length; i++) {
+      const article = articles[i];
+      if (article.url) {
+        console.log(`📸 Getting image for: ${article.title.substring(0, 50)}...`);
+        article.imageUrl = await extractArticleImage(article.url);
+        if (article.imageUrl) {
+          console.log(`✅ Found image: ${article.imageUrl}`);
+        } else {
+          console.log(`❌ No image found`);
+        }
+      }
+    }
+    
     return articles;
 
   } catch (error) {
