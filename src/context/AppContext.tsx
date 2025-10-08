@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { Article, AppTheme } from '../types';
+import { Appearance } from 'react-native';
+import { Article, AppTheme, ThemeMode } from '../types';
 import { LIGHT_THEME, DARK_THEME } from '../constants/theme';
 import { scrapeDalGazette, scrapeArticleContent } from '../utils/scraper';
 
@@ -9,7 +10,8 @@ interface AppContextType {
   bookmarkedArticles: string[];
   toggleBookmark: (articleId: string) => void;
   theme: AppTheme;
-  toggleTheme: () => void;
+  themeMode: ThemeMode;
+  setThemeMode: (mode: ThemeMode) => void;
   selectedCategory: string | null;
   setSelectedCategory: (category: string | null) => void;
   scrapedArticles: Article[];
@@ -35,10 +37,21 @@ interface AppProviderProps {
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [bookmarkedArticles, setBookmarkedArticles] = useState<string[]>([]);
-  const [theme, setTheme] = useState<AppTheme>(LIGHT_THEME);
+  const [themeMode, setThemeMode] = useState<ThemeMode>('system');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [scrapedArticles, setScrapedArticles] = useState<Article[]>([]);
   const [isLoadingArticles, setIsLoadingArticles] = useState(false);
+
+  // Get the current theme based on mode and system preference
+  const getCurrentTheme = (): AppTheme => {
+    if (themeMode === 'system') {
+      const systemColorScheme = Appearance.getColorScheme();
+      return systemColorScheme === 'dark' ? DARK_THEME : LIGHT_THEME;
+    }
+    return themeMode === 'dark' ? DARK_THEME : LIGHT_THEME;
+  };
+
+  const [theme, setTheme] = useState<AppTheme>(getCurrentTheme());
 
   const toggleBookmark = (articleId: string) => {
     setBookmarkedArticles((prev: string[]) => 
@@ -48,9 +61,18 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     );
   };
 
-  const toggleTheme = () => {
-    setTheme(prev => prev.isDark ? LIGHT_THEME : DARK_THEME);
-  };
+  // Update theme when mode or system preference changes
+  useEffect(() => {
+    const updateTheme = () => {
+      setTheme(getCurrentTheme());
+    };
+
+    updateTheme();
+
+    // Listen for system theme changes
+    const subscription = Appearance.addChangeListener(updateTheme);
+    return () => subscription?.remove();
+  }, [themeMode]);
 
   const refreshArticles = async () => {
     setIsLoadingArticles(true);
@@ -95,7 +117,8 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     bookmarkedArticles,
     toggleBookmark,
     theme,
-    toggleTheme,
+    themeMode,
+    setThemeMode,
     selectedCategory,
     setSelectedCategory,
     scrapedArticles,

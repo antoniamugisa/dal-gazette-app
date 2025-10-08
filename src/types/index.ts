@@ -24,6 +24,8 @@ export interface SearchFilters {
   dateRange: 'all' | 'today' | 'week' | 'month';
 }
 
+export type ThemeMode = 'light' | 'dark' | 'system';
+
 export interface AppTheme {
   colors: {
     primary: string;

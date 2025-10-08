@@ -7,10 +7,13 @@ import {
   ScrollView,
   Switch,
   Alert,
+  Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import { ArrowLeft, ChevronRight, Settings } from 'lucide-react-native';
+import { ArrowLeft, ChevronRight, Settings, Check } from 'lucide-react-native';
+import { useAppContext } from '../context/AppContext';
+import { ThemeMode } from '../types';
 
 interface SettingsItemProps {
   title: string;
@@ -55,6 +58,7 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({ title }) => (
 
 export const SettingsScreen: React.FC = () => {
   const navigation = useNavigation();
+  const { theme, themeMode, setThemeMode } = useAppContext();
   const scrollViewRef = useRef<ScrollView>(null);
   const settingsSectionRef = useRef<View>(null);
   
@@ -71,6 +75,8 @@ export const SettingsScreen: React.FC = () => {
   const [appSettings, setAppSettings] = useState({
     autoplayVideos: true,
   });
+
+  const [showThemeModal, setShowThemeModal] = useState(false);
 
 
   const handleBackPress = () => {
@@ -90,7 +96,21 @@ export const SettingsScreen: React.FC = () => {
   };
 
   const handleDisplaySettings = () => {
-    Alert.alert('Display Settings', 'Display settings coming soon!');
+    setShowThemeModal(true);
+  };
+
+  const handleThemeSelect = (mode: ThemeMode) => {
+    setThemeMode(mode);
+    setShowThemeModal(false);
+  };
+
+  const getThemeDisplayName = (mode: ThemeMode): string => {
+    switch (mode) {
+      case 'light': return 'Light';
+      case 'dark': return 'Dark';
+      case 'system': return 'System';
+      default: return 'System';
+    }
   };
 
   const handleDataUsage = () => {
@@ -258,6 +278,7 @@ export const SettingsScreen: React.FC = () => {
         />
         <SettingsItem
           title="Display Settings"
+          subtitle={getThemeDisplayName(themeMode)}
           onPress={handleDisplaySettings}
           showArrow
         />
@@ -319,6 +340,66 @@ export const SettingsScreen: React.FC = () => {
           <Text style={styles.footerText}>B3H 4J2</Text>
         </View>
       </ScrollView>
+
+      {/* Theme Selection Modal */}
+      <Modal
+        visible={showThemeModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowThemeModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalContent, { backgroundColor: theme.colors.surface }]}>
+            <Text style={[styles.modalTitle, { color: theme.colors.text }]}>Choose Theme</Text>
+            
+            <TouchableOpacity
+              style={[styles.themeOption, { borderBottomColor: theme.colors.border }]}
+              onPress={() => handleThemeSelect('light')}
+            >
+              <View style={styles.themeOptionContent}>
+                <Text style={[styles.themeOptionTitle, { color: theme.colors.text }]}>Light</Text>
+                <Text style={[styles.themeOptionSubtitle, { color: theme.colors.textSecondary }]}>
+                  Always use light theme
+                </Text>
+              </View>
+              {themeMode === 'light' && <Check size={20} color={theme.colors.primary} />}
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.themeOption, { borderBottomColor: theme.colors.border }]}
+              onPress={() => handleThemeSelect('dark')}
+            >
+              <View style={styles.themeOptionContent}>
+                <Text style={[styles.themeOptionTitle, { color: theme.colors.text }]}>Dark</Text>
+                <Text style={[styles.themeOptionSubtitle, { color: theme.colors.textSecondary }]}>
+                  Always use dark theme
+                </Text>
+              </View>
+              {themeMode === 'dark' && <Check size={20} color={theme.colors.primary} />}
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.themeOption}
+              onPress={() => handleThemeSelect('system')}
+            >
+              <View style={styles.themeOptionContent}>
+                <Text style={[styles.themeOptionTitle, { color: theme.colors.text }]}>System</Text>
+                <Text style={[styles.themeOptionSubtitle, { color: theme.colors.textSecondary }]}>
+                  Follow system settings
+                </Text>
+              </View>
+              {themeMode === 'system' && <Check size={20} color={theme.colors.primary} />}
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.modalCloseButton, { backgroundColor: theme.colors.primary }]}
+              onPress={() => setShowThemeModal(false)}
+            >
+              <Text style={styles.modalCloseButtonText}>Done</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -432,5 +513,53 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#6B7280',
     marginTop: 2,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 40,
+    maxHeight: '50%',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  themeOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+  },
+  themeOptionContent: {
+    flex: 1,
+  },
+  themeOptionTitle: {
+    fontSize: 16,
+    fontWeight: '500',
+    marginBottom: 2,
+  },
+  themeOptionSubtitle: {
+    fontSize: 14,
+  },
+  modalCloseButton: {
+    marginTop: 20,
+    paddingVertical: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  modalCloseButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
